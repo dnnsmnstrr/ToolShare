@@ -2,7 +2,9 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
+import useAuth from '../hooks/useAuth'
 
+import Login from '../screens/Login';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
 import BottomTabNavigator from './BottomTabNavigator';
@@ -25,6 +27,12 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const { token } = useAuth()
+  if (!token) {
+    return <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login" component={Login} />
+    </Stack.Navigator>
+  }
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} />
