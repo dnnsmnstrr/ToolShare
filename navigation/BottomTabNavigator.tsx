@@ -2,12 +2,24 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-
+import { Button } from 'react-native';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import useAuth from '../hooks/useAuth';
+
+const LogoutButton = () => {
+  const {logout} = useAuth()
+  return <Button
+  title='Logout'
+  color='red'
+  onPress={() => {
+    logout()
+  }}
+  />
+}
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -66,7 +78,10 @@ function TabTwoNavigator() {
       <TabTwoStack.Screen
         name="TabTwoScreen"
         component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
+        options={({ navigation }) => ({
+          headerTitle: 'Profil',
+          headerRight: LogoutButton
+        })}
       />
     </TabTwoStack.Navigator>
   );

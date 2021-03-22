@@ -9,7 +9,7 @@ export const AuthContext = React.createContext({})
 export const AuthProvider = ({ children }) => {
   const login = async (params) => {
     try {
-      const response = await fetch(API_URL, {method: 'post', body: JSON.stringify(params)})
+      const response = {data: {access_token: 'test'}}//await fetch(API_URL, {method: 'post', body: JSON.stringify(params)})
       console.log('response', response)
       if (response.data) {
         const { access_token, ...restParams } = response.data;
