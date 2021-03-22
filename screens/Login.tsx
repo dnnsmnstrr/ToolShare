@@ -14,7 +14,6 @@ const LoginInput = ({title = '', value, placeholder, onChangeText}) => {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    placeholderTextColor: 'gray',
     paddingLeft: 10,
     marginBottom: 20,
   }}

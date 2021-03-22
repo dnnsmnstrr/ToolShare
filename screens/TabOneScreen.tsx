@@ -7,7 +7,7 @@ import { Text, View } from '../components/Themed';
 export default function TabOneScreen() {
   const [tools, setTools] = useState([])
   const getTools = async () => {
-    const response = await fetch('http://192.168.0.191:8080' + '/tools')
+    const response = await fetch('http://192.168.178.84:8080' + '/tools')
     const tools = await response.json()
     setTools(tools)
   }

@@ -2,21 +2,22 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Platform } from 'react-native'
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
-const API_URL = "http://localhost:8080/api/auth/";
+import axios from "axios";
+const API_URL = "http://192.168.178.84:8080/api/auth/";
 
 export const AuthContext = React.createContext({})
 
 export const AuthProvider = ({ children }) => {
   const login = async (params, register = false) => {
     try {
-      const response = await fetch(API_URL + register ? 'signup' : 'signin', {method: 'post', body: JSON.stringify(params)})
-      console.log('response', response)
-      if (response.data) {
-        const { access_token, ...restParams } = response.data;
-        setToken(access_token)
+      const response = await fetch(API_URL + (register ? 'signup' : 'signin'), {method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json'},body: JSON.stringify(params)})
+      const data = await response.json();
+      console.log('response', data);
+      if (data.accessToken) {
+        setToken(data.accessToken)
 
         if (Platform.OS !== 'web') {
-          SecureStore.setItemAsync('access_token', storageValue);
+          SecureStore.setItemAsync('user_data', data);
         }
       }
     } catch (err) {
@@ -34,18 +35,24 @@ export const AuthProvider = ({ children }) => {
   }
 
   const logout = () => {
-    SecureStore.setItemAsync('access_token', '');
+    SecureStore.setItemAsync('user_data', '');
     setToken(null)
   }
 
   const [token, setToken] = useState()
 
   const getToken = async () => {
-    const token = await getValueFor('access_token')
-    console.log('token', token)
-    if (token) {
-      setToken(token)
+    const {accessToken} = await getValueFor('user_data')
+    console.log('token', accessToken)
+    if (accessToken) {
+      setToken(accessToken)
     }
+  }
+
+  const getUser = async () => {
+    const user = await getValueFor('user_data')
+    console.log(user)
+    return user
   }
 
   useEffect(() => {
@@ -53,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout, getUser }}>
       {children}
     </AuthContext.Provider>
   )
