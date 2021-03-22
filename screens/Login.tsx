@@ -7,6 +7,23 @@ import useAuth from '../hooks/useAuth'
 import CenterView from '../components/CenterView';
 import Spacer from '../components/Spacer';
 
+const LoginInput = ({title = '', value, placeholder, onChangeText}) => {
+  return <TextInput
+    style={{
+    width: '100%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    placeholderTextColor: 'gray',
+    paddingLeft: 10,
+    marginBottom: 20,
+  }}
+    onChangeText={onChangeText}
+    value={value}
+    placeholder={placeholder || title}
+  />
+}
+
 export default function Login ({ navigation }) {
   const {login} = useAuth()
   const [loading, setLoading] = useState(false)
@@ -24,45 +41,24 @@ export default function Login ({ navigation }) {
   return (
     <CenterView>
       {loading ? <ActivityIndicator /> : <View style={{width: '80%', flexDirection: 'column'}}>
-        <TextInput
-          style={{
-          width: '100%',
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          placeholderTextColor: 'gray',
-        }}
+        <LoginInput
           onChangeText={setUsername}
           value={username}
           placeholder="username"
         />
-        <TextInput
-          style={{
-          width: '100%',
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          placeholderTextColor: 'gray',
-        }}
+        <LoginInput
           onChangeText={setPassword}
           value={password}
           placeholder="password"
         />
-        {registering && <TextInput
-          style={{
-          width: '100%',
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          placeholderTextColor: 'gray',
-        }}
+        {registering && <LoginInput
           onChangeText={setEmail}
           value={email}
           placeholder="email"
         />}
         <Button disabled={!username || !password} title='Weiter' onPress={handleLogin} />
         <Spacer height={30}/>
-        <Button disabled={!username || !password || !email} title={registering ? 'Login' : 'Register'} onPress={() => setRegistering(!registering)} />
+        <Button title={registering ? 'Login' : 'Register'} onPress={() => setRegistering(!registering)} />
       </View>}
 
     </CenterView>
