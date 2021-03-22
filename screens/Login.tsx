@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth'
 import CenterView from '../components/CenterView';
 import Spacer from '../components/Spacer';
 
-const LoginInput = ({title = '', value, placeholder, onChangeText}) => {
+const LoginInput = ({title = '', value, placeholder, onChangeText, ...restProps}) => {
   return <TextInput
     style={{
     width: '100%',
@@ -20,6 +20,8 @@ const LoginInput = ({title = '', value, placeholder, onChangeText}) => {
     onChangeText={onChangeText}
     value={value}
     placeholder={placeholder || title}
+    autoCapitalize='none'
+    {...restProps}
   />
 }
 
@@ -49,11 +51,13 @@ export default function Login ({ navigation }) {
           onChangeText={setPassword}
           value={password}
           placeholder="password"
+          onSubmit={handleLogin}
         />
         {registering && <LoginInput
           onChangeText={setEmail}
           value={email}
           placeholder="email"
+          onSubmit={handleLogin}
         />}
         <Button disabled={!username || !password} title='Weiter' onPress={handleLogin} />
         <Spacer height={30}/>

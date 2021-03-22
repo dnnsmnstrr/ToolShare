@@ -3,14 +3,21 @@ import { StyleSheet, FlatList, TouchableHighlight } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
+import useAuth from '../hooks/useAuth'
 
 export default function TabOneScreen() {
   const [tools, setTools] = useState([])
+  const {authorizedRequest} = useAuth()
+
+  const [refreshing, setRefreshing] = useState(false)
+
   const getTools = async () => {
-    const response = await fetch('http://192.168.178.84:8080' + '/tools')
-    const tools = await response.json()
+    setRefreshing(true)
+    const {tools} = await authorizedRequest('tools')
     setTools(tools)
+    setRefreshing(false)
   }
+
   useEffect(() => {
     getTools()
   }, [])
@@ -31,6 +38,8 @@ export default function TabOneScreen() {
             </View>
           </TouchableHighlight>
         )}}
+        refreshing={refreshing}
+        onRefresh={getTools}
       />
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="/screens/TabOneScreen.tsx" />

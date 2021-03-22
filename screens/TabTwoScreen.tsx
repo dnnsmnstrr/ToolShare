@@ -10,7 +10,10 @@ export default function TabTwoScreen() {
   const [email, setEmail] = useState()
   const updateUser = async () => {
     const user = await getUser()
-    setEmail(user.email)
+    console.log('user', user);
+    if (user && user.email) {
+      setEmail(user.email)
+    }
   }
   useEffect(() => {
     updateUser()

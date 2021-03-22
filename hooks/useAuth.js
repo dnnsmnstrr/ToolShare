@@ -2,26 +2,38 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Platform } from 'react-native'
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
-import axios from "axios";
-const API_URL = "http://192.168.178.84:8080/api/auth/";
+const USER_DATA_KEY='user_data'
+const API_URL = "http://192.168.0.191:8080/api/";
+const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json'}
 
 export const AuthContext = React.createContext({})
 
 export const AuthProvider = ({ children }) => {
   const login = async (params, register = false) => {
     try {
-      const response = await fetch(API_URL + (register ? 'signup' : 'signin'), {method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json'},body: JSON.stringify(params)})
-      const data = await response.json();
-      console.log('response', data);
-      if (data.accessToken) {
-        setToken(data.accessToken)
-
-        if (Platform.OS !== 'web') {
-          SecureStore.setItemAsync('user_data', data);
-        }
+      const authRoute = 'auth/' + (register ? 'signup' : 'signin')
+      const response = await fetch(API_URL + authRoute, {method: 'POST', headers: jsonHeaders, body: JSON.stringify(params)})
+      const {accessToken, email} = await response.json();
+      if (accessToken) {
+        setToken(accessToken)
+        storeValue({accessToken, email})
       }
     } catch (err) {
       console.error(err)
+    }
+  }
+
+  async function storeValue(value, key = USER_DATA_KEY) {
+    const data = typeof(value) === 'String' ? value : JSON.stringify(value)
+    console.log('data', data)
+    if (Platform.OS !== 'web') {
+      try {
+        await SecureStore.setItemAsync(key, data);
+      } catch (err) {
+        console.error(err)
+      }
+      const test = await getValueFor(USER_DATA_KEY)
+      console.log('test', test)
     }
   }
 
@@ -34,23 +46,34 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const authorizedRequest = async (route = '', method = 'GET', params = {}) => {
+    const headers = { Authorization: 'Bearer ' + token, ...(method === 'POST' && jsonHeaders) }
+    console.log('headers', headers)
+    const response = await fetch(API_URL + route, {method, headers })
+    const data = await response.json()
+    console.log('response', data)
+    if (data) {
+      return data
+    }
+  }
+
   const logout = () => {
-    SecureStore.setItemAsync('user_data', '');
+    SecureStore.deleteItemAsync(USER_DATA_KEY);
     setToken(null)
   }
 
   const [token, setToken] = useState()
 
   const getToken = async () => {
-    const {accessToken} = await getValueFor('user_data')
-    console.log('token', accessToken)
-    if (accessToken) {
-      setToken(accessToken)
-    }
+    const data = await getValueFor(USER_DATA_KEY)
+    console.log('token', data)
+    if (data && data.accessToken) {
+      setToken(data.accessToken)
+      }
   }
 
   const getUser = async () => {
-    const user = await getValueFor('user_data')
+    const user = await getValueFor(USER_DATA_KEY)
     console.log(user)
     return user
   }
@@ -60,7 +83,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, getUser }}>
+    <AuthContext.Provider value={{ token, login, logout, getUser, authorizedRequest }}>
       {children}
     </AuthContext.Provider>
   )
