@@ -7,9 +7,9 @@ const API_URL = "http://localhost:8080/api/auth/";
 export const AuthContext = React.createContext({})
 
 export const AuthProvider = ({ children }) => {
-  const login = async (params) => {
+  const login = async (params, register = false) => {
     try {
-      const response = {data: {access_token: 'test'}}//await fetch(API_URL, {method: 'post', body: JSON.stringify(params)})
+      const response = await fetch(API_URL + register ? 'signup' : 'signin', {method: 'post', body: JSON.stringify(params)})
       console.log('response', response)
       if (response.data) {
         const { access_token, ...restParams } = response.data;

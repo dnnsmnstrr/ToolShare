@@ -34,7 +34,7 @@ export default function Login ({ navigation }) {
 
   const handleLogin = async () => {
     if (!username || !password) return
-    await login({username, email, password})
+    await login({username, email, password}, registering)
     setLoading(true)
   }
 
