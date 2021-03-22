@@ -17,6 +17,7 @@ const CONTAINER: ViewStyle = {
 const DEMO: ViewStyle = {
   paddingVertical: spacing[4],
   paddingHorizontal: spacing[4],
+  marginBottom: spacing[2],
   backgroundColor: "#5D2555",
 }
 const BOLD: TextStyle = { fontWeight: "bold" }
@@ -158,6 +159,12 @@ export const DemoScreen = observer(function DemoScreen() {
           textStyle={DEMO_TEXT}
           tx="demoScreen.demoList"
           onPress={() => navigation.navigate("demoList")}
+        />
+        <Button
+          style={DEMO}
+          textStyle={DEMO_TEXT}
+          tx="demoScreen.toolList"
+          onPress={() => navigation.navigate("toolList")}
         />
         <Image source={logoIgnite} style={IGNITE} />
         <View style={LOVE_WRAPPER}>
