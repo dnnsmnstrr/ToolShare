@@ -8,6 +8,7 @@ import useAuth from '../hooks/useAuth'
 
 export default function TabOneScreen() {
   const [tools, setTools] = useState([])
+  const [query, setQuery] = useState('')
   const {authorizedRequest} = useAuth()
 
   const [refreshing, setRefreshing] = useState(false)
@@ -24,9 +25,9 @@ export default function TabOneScreen() {
   }, [])
   return (
     <View style={styles.container}>
-      <TextInput style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}/>
+      <TextInput onChangeText={setQuery} style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}/>
       <FlatList
-        data={tools}
+        data={tools.filter(({name}) => name.toLowerCase().includes(query.toLowerCase()))}
         style={{width: '100%', flex: 1}}
         keyExtractor={(item, index) => item.name + index}
         ListHeaderComponent={<Spacer height={10} />}
