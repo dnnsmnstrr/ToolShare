@@ -64,9 +64,9 @@ export const AuthProvider = ({ children }) => {
 
   const [token, setToken] = useState()
   const [checkingToken, setCheckingToken] = useState(true)
+
   const getToken = async () => {
     const data = await getValueFor(USER_DATA_KEY)
-    console.log('token', data)
     if (data && data.accessToken) {
       setToken(data.accessToken)
     }

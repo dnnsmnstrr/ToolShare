@@ -10,7 +10,6 @@ export default function Settings() {
   const [email, setEmail] = useState()
   const refreshUser = async () => {
     const user = await getUser()
-    console.log('user', user);
     if (user && user.email) {
       setEmail(user.email)
     }

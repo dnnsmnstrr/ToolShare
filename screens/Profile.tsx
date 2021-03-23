@@ -10,7 +10,6 @@ export default function TabTwoScreen() {
   const [email, setEmail] = useState()
   const updateUser = async () => {
     const user = await getUser()
-    console.log('user', user);
     if (user && user.email) {
       setEmail(user.email)
     }
@@ -18,7 +17,7 @@ export default function TabTwoScreen() {
   useEffect(() => {
     updateUser()
   }, [])
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab Two</Text>
