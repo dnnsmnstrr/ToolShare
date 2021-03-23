@@ -5,6 +5,7 @@ import * as SecureStore from 'expo-secure-store';
 const USER_DATA_KEY='user_data'
 const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json'}
 
+const API_URL = 'http://192.168.0.191:8080/'
 export const AuthContext = React.createContext({})
 
 export const AuthProvider = ({ children }) => {

@@ -8,6 +8,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import Icon from '../components/Icon';
 import IconButton from '../components/IconButton';
 import Tools from '../screens/Tools';
+import AddTool from '../screens/AddTool';
 import Profile from '../screens/Profile';
 import Settings from '../screens/Settings';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
@@ -73,7 +74,15 @@ function TabOneNavigator() {
       <TabOneStack.Screen
         name="Tools"
         component={Tools}
-        options={{ headerTitle: 'Tools' }}
+        options={({navigation}) => ({
+          headerTitle: 'Tools',
+          headerRight: () => <IconButton name='add' onPress={() => navigation.navigate('AddTool')} size={26}/>
+        })}
+      />
+      <TabOneStack.Screen
+        name="AddTool"
+        component={AddTool}
+        options={{ headerTitle: 'Add new tool' }}
       />
       <TabOneStack.Screen
         name="ToolDetails"

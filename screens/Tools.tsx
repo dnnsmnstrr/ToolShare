@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import { StyleSheet, FlatList, TouchableHighlight } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View, TextInput } from '../components/Themed';
+import EditScreenInfo from '../components/EditScreenInfo';
+import Spacer from '../components/Spacer'
 import useAuth from '../hooks/useAuth'
 
 export default function TabOneScreen() {
@@ -23,18 +24,18 @@ export default function TabOneScreen() {
   }, [])
   return (
     <View style={styles.container}>
-      <TextInput style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '80%', marginTop: 5, paddingHorizontal: 10}}/>
+      <TextInput style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}/>
       <FlatList
         data={tools}
         style={{width: '100%', flex: 1}}
         keyExtractor={(item, index) => item.name + index}
-        renderItem={({item}) => {
-          console.log('item', item)
+        ListHeaderComponent={<Spacer height={10} />}
+        renderItem={({item: {name}}) => {
           return(
           <TouchableHighlight
           >
-            <View style={{ backgroundColor: 'white', paddingLeft: 20 }}>
-              <Text>{item.name}</Text>
+            <View style={{ paddingLeft: 20 }}>
+              <Text style={styles.title}>{name}</Text>
             </View>
           </TouchableHighlight>
         )}}
