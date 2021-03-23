@@ -5,8 +5,8 @@ import * as React from 'react';
 import { Button } from 'react-native';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
+import Tools from '../screens/Tools';
+import Profile from '../screens/Profile';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
 import useAuth from '../hooks/useAuth';
 
@@ -62,9 +62,9 @@ function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
+        name="Tools"
+        component={Tools}
+        options={{ headerTitle: 'Tools' }}
       />
     </TabOneStack.Navigator>
   );
@@ -76,8 +76,8 @@ function TabTwoNavigator() {
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
+        name="Profile"
+        component={Profile}
         options={({ navigation }) => ({
           headerTitle: 'Profil',
           headerRight: LogoutButton

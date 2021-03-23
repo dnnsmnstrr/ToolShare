@@ -28,8 +28,8 @@ const LoginInput = ({title = '', value, placeholder, onChangeText, ...restProps}
 export default function Login ({ navigation }) {
   const {login, checkingToken = true} = useAuth()
   const [loading, setLoading] = useState(false)
-  const [username, setUsername] = useState()
-  const [password, setPassword] = useState()
+  const [username, setUsername] = useState('dennis')
+  const [password, setPassword] = useState('password')
   const [email, setEmail] = useState()
   const [registering, setRegistering] = useState()
 

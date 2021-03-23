@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { StyleSheet, FlatList, TouchableHighlight } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import { Text, View, TextInput } from '../components/Themed';
 import useAuth from '../hooks/useAuth'
 
 export default function TabOneScreen() {
@@ -23,7 +23,7 @@ export default function TabOneScreen() {
   }, [])
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tools</Text>
+      <TextInput style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '80%', marginTop: 5, paddingHorizontal: 10}}/>
       <FlatList
         data={tools}
         style={{width: '100%', flex: 1}}
