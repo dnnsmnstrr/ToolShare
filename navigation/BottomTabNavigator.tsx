@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Button } from 'react-native';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import Icon from '../components/Icon'
 import Tools from '../screens/Tools';
 import Profile from '../screens/Profile';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
@@ -15,9 +16,7 @@ const LogoutButton = () => {
   return <Button
   title='Logout'
   color='red'
-  onPress={() => {
-    logout()
-  }}
+  onPress={logout}
   />
 }
 
@@ -31,17 +30,17 @@ export default function BottomTabNavigator() {
       initialRouteName="TabOne"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="TabOne"
+        name="Tools"
         component={TabOneNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color, focused }) => <Icon name={focused ? 'hammer' : 'hammer-outline'} family='ionic' color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Profile"
         component={TabTwoNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color, focused }) => <Icon name={'toolbox'} family='materialCommunity' focused={focused} color={color} />,
         }}
       />
     </BottomTab.Navigator>
