@@ -2,10 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Platform } from 'react-native'
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
+
+const { manifest } = Constants;
+const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
+? manifest.debuggerHost.split(':').shift().concat(':8080/')
+: `api.example.com`;
+const API_URL = 'http://' + api || 'http://192.168.0.191:8080/'
+
 const USER_DATA_KEY='user_data'
 const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json'}
 
-const API_URL = 'http://192.168.0.191:8080/'
 export const AuthContext = React.createContext({})
 
 export const AuthProvider = ({ children }) => {
