@@ -5,9 +5,11 @@ import * as React from 'react';
 import { Button } from 'react-native';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import Icon from '../components/Icon'
+import Icon from '../components/Icon';
+import IconButton from '../components/IconButton';
 import Tools from '../screens/Tools';
 import Profile from '../screens/Profile';
+import Settings from '../screens/Settings';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
 import useAuth from '../hooks/useAuth';
 
@@ -19,6 +21,14 @@ const LogoutButton = () => {
   onPress={logout}
   />
 }
+
+const NavButton = ({title = '', goTo, color = 'blue', navigation}) => (
+  <Button
+    title={title}
+    color={color}
+    onPress={() => navigation.navigate(goTo || title)}
+  />
+)
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -65,6 +75,11 @@ function TabOneNavigator() {
         component={Tools}
         options={{ headerTitle: 'Tools' }}
       />
+      <TabOneStack.Screen
+        name="ToolDetails"
+        component={Tools}
+        options={{ headerTitle: 'Tools' }}
+      />
     </TabOneStack.Navigator>
   );
 }
@@ -79,6 +94,14 @@ function TabTwoNavigator() {
         component={Profile}
         options={({ navigation }) => ({
           headerTitle: 'Profil',
+          headerRight: () => <IconButton name='settings' onPress={() => navigation.navigate('Settings')} size={26}/>
+        })}
+      />
+      <TabTwoStack.Screen
+        name="Settings"
+        component={Settings}
+        options={({ navigation }) => ({
+          headerTitle: 'Einstellungen',
           headerRight: LogoutButton
         })}
       />

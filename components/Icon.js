@@ -14,5 +14,5 @@ const families = {
 // https://icons.expo.fyi/
 export default function Icon({name, family = 'material', size = 30, focused = true, ...props}) {
   const IconFamily = families[family]
-  return <IconFamily name={focused || name.includes('outline') ? name : name + '-outline' } size={size} style={{ marginBottom: -3 }} {...props} />;
+  return <IconFamily name={focused || name.includes('outline') ? name : name + '-outline' } size={size} {...props} />;
 }
