@@ -13,7 +13,7 @@ export default function TabOneScreen() {
 
   const getTools = async () => {
     setRefreshing(true)
-    const {tools} = await authorizedRequest('tools')
+    const {_embedded : {tools}} = await authorizedRequest('tools')
     setTools(tools)
     setRefreshing(false)
   }
