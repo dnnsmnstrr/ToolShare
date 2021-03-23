@@ -3,7 +3,6 @@ import { Platform } from 'react-native'
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 const USER_DATA_KEY='user_data'
-const API_URL = "http://192.168.0.191:8080/api/";
 const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json'}
 
 export const AuthContext = React.createContext({})
@@ -11,7 +10,7 @@ export const AuthContext = React.createContext({})
 export const AuthProvider = ({ children }) => {
   const login = async (params, register = false) => {
     try {
-      const authRoute = 'auth/' + (register ? 'signup' : 'signin')
+      const authRoute = 'api/auth/' + (register ? 'signup' : 'signin')
       const response = await fetch(API_URL + authRoute, {method: 'POST', headers: jsonHeaders, body: JSON.stringify(params)})
       const {accessToken, email} = await response.json();
       if (accessToken) {
