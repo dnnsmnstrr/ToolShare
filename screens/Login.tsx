@@ -26,7 +26,7 @@ const LoginInput = ({title = '', value, placeholder, onChangeText, ...restProps}
 }
 
 export default function Login ({ navigation }) {
-  const {login} = useAuth()
+  const {login, checkingToken = true} = useAuth()
   const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState()
   const [password, setPassword] = useState()
@@ -41,7 +41,7 @@ export default function Login ({ navigation }) {
 
   return (
     <CenterView>
-      {loading ? <ActivityIndicator /> : <View style={{width: '80%', flexDirection: 'column'}}>
+      {loading || checkingToken ? <ActivityIndicator /> : <View style={{width: '80%', flexDirection: 'column'}}>
         <LoginInput
           onChangeText={setUsername}
           value={username}

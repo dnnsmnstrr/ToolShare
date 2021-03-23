@@ -63,13 +63,14 @@ export const AuthProvider = ({ children }) => {
   }
 
   const [token, setToken] = useState()
-
+  const [checkingToken, setCheckingToken] = useState(true)
   const getToken = async () => {
     const data = await getValueFor(USER_DATA_KEY)
     console.log('token', data)
     if (data && data.accessToken) {
       setToken(data.accessToken)
-      }
+    }
+    setCheckingToken(false)
   }
 
   const getUser = async () => {
@@ -83,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, getUser, authorizedRequest }}>
+    <AuthContext.Provider value={{ token, checkingToken, login, logout, getUser, authorizedRequest }}>
       {children}
     </AuthContext.Provider>
   )
