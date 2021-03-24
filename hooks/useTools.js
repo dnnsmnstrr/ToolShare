@@ -22,5 +22,13 @@ export default function useTools() {
     getTools()
   }, [])
 
-  return {tools, getTools, refreshing, addTool}
+  // TODO: fetch categories dynamically
+  const categories = [
+    { label: 'Hammer', value: 'hammers'},
+    { label: 'Zangen', value: 'pliers'},
+    { label: 'Bohrer', value: 'drills'},
+    { label: 'Sägen', value: 'saws'},
+    { label: 'Andere', value: 'other'}
+  ]
+  return {tools, getTools, refreshing, addTool, categories}
 }

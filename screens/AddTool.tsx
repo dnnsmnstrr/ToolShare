@@ -5,12 +5,12 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, TextInput, View } from '../components/Themed';
 import ToolInput from '../components/ToolInput';
 import Select from '../components/Select';
-import useAuth from '../hooks/useAuth'
+import useTools from '../hooks/useTools'
 
-export default function Settings() {
-  const {getUser, logout} = useAuth()
-  const [email, setEmail] = useState()
-  const [name, setName] = useState()
+export default function AddTool() {
+  const {addTool, categories} = useTools()
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
   const [image, setImage] = useState()
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function Settings() {
       <ToolInput title='Name' style={{width: '90%', marginTop: 30}} onChangeText={setName} />
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      <Select />
+      <Select options={categories}/>
     </View>
   );
 }
