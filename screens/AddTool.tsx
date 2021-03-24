@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, TextInput, View } from '../components/Themed';
 import ToolInput from '../components/ToolInput';
+import Select from '../components/Select';
 import useAuth from '../hooks/useAuth'
 
 export default function Settings() {
@@ -44,6 +45,7 @@ export default function Settings() {
       <ToolInput title='Name' style={{width: '90%', marginTop: 30}} onChangeText={setName} />
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      <Select />
     </View>
   );
 }

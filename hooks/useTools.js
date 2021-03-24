@@ -14,9 +14,13 @@ export default function useTools() {
     setRefreshing(false)
   }
 
+  const addTool = async (params) => {
+    const response = await authorizedRequest('api/tool/add', 'POST', params)
+  }
+
   useEffect(() => {
     getTools()
   }, [])
 
-  return {tools, getTools, refreshing}
+  return {tools, getTools, refreshing, addTool}
 }
