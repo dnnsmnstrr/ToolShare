@@ -16,6 +16,7 @@ export default function useTools() {
 
   const addTool = async (params) => {
     const response = await authorizedRequest('api/tool/add', 'POST', params)
+    console.log('response', response)
   }
 
   useEffect(() => {

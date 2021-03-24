@@ -1,19 +1,20 @@
-import React, {useState} from 'react'
-import {Picker} from 'react-native'
+import React from 'react'
+import {View, Picker} from 'react-native'
 import {useThemeColor} from './Themed'
-const Select = ({options = [{label: 'None', value: 'none'}]}) => {
+
+const Select = ({selectedValue = 'none', options = [{label: 'None', value: 'none'}], height = 100, onChange = () => {}}) => {
   const textColor = useThemeColor({}, 'text');
-  console.log('textColor', textColor)
-  const [selectedValue, setSelectedValue] = useState(options.length ? options[0] : 'none')
   return (
-    <Picker
+    <View style={{ height, width: '100%', overflow: 'hidden'}}>
+      <Picker
       selectedValue={selectedValue}
-      style={{ height: 50, width: '100%' }}
+      style={{ height, width: '100%', top: -(height / 2) }}
       itemStyle={{color: textColor}}
-      onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-    >
-      {options.map((option) => <Picker.Item {...option}/>)}
-    </Picker>
+      onValueChange={(itemValue, itemIndex) => onChange(itemValue)}
+      >
+        {options.map((option) => <Picker.Item {...option}/>)}
+      </Picker>
+    </View>
   )
 }
 

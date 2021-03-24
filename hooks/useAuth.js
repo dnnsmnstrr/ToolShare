@@ -52,12 +52,21 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const addParams = (params) => {
+    if (!params || !Object.keys(params).length) return ''
+    return '?' + Object.keys(params)
+        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+        .join('&');
+  }
   const authorizedRequest = async (route = '', method = 'GET', params = {}) => {
-    const headers = { Authorization: 'Bearer ' + token, ...(method === 'POST' && jsonHeaders) }
+    const isPost = method === 'POST'
+    const headers = { Authorization: 'Bearer ' + token, ...(isPost && jsonHeaders) }
     console.log('headers', headers)
-    const response = await fetch(API_URL + route, {method, headers })
+    const url = API_URL + route
+    const response = await fetch(isPost ? url + addParams(params) : url, {method, headers})
+    console.log('response', response)
     const data = await response.json()
-    console.log('response', data)
+    console.log('data', data)
     if (data) {
       return data
     }
