@@ -4,25 +4,16 @@ import { StyleSheet, FlatList, TouchableHighlight } from 'react-native';
 import { Text, View, TextInput } from '../components/Themed';
 import EditScreenInfo from '../components/EditScreenInfo';
 import Spacer from '../components/Spacer'
-import useAuth from '../hooks/useAuth'
+import useTools from '../hooks/useTools'
 
 export default function TabOneScreen() {
-  const [tools, setTools] = useState([])
   const [query, setQuery] = useState('')
-  const {authorizedRequest} = useAuth()
-
-  const [refreshing, setRefreshing] = useState(false)
-
-  const getTools = async () => {
-    setRefreshing(true)
-    const {_embedded : {tools}} = await authorizedRequest('tools')
-    setTools(tools)
-    setRefreshing(false)
-  }
+  const {tools, getTools, refreshing} = useTools()
 
   useEffect(() => {
     getTools()
   }, [])
+
   return (
     <View style={styles.container}>
       <TextInput onChangeText={setQuery} style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}/>
