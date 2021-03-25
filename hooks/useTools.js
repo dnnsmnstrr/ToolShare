@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import useAuth from './useAuth'
 
-
 export default function useTools() {
   const {authorizedRequest} = useAuth()
   const [tools, setTools] = useState([])
@@ -9,7 +8,7 @@ export default function useTools() {
 
   const getTools = async () => {
     setRefreshing(true)
-    const {_embedded : {tools}} = await authorizedRequest('tools')
+    const {_embedded: {tools = []} = {}} = await authorizedRequest('tools')
     setTools(tools)
     setRefreshing(false)
   }
@@ -31,5 +30,6 @@ export default function useTools() {
     { label: 'Sägen', value: 'saws'},
     { label: 'Andere', value: 'other'}
   ]
+
   return {tools, getTools, refreshing, addTool, categories}
 }

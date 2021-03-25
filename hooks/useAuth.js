@@ -6,7 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 const { manifest } = Constants;
 const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
 ? manifest.debuggerHost.split(':').shift().concat(':8080/')
-: `api.example.com`;
+: '192.168.0.191:8080/';
 const API_URL = 'http://' + api || 'http://192.168.0.191:8080/'
 
 const USER_DATA_KEY='user_data'
@@ -31,19 +31,17 @@ export const AuthProvider = ({ children }) => {
 
   async function storeValue(value, key = USER_DATA_KEY) {
     const data = typeof(value) === 'String' ? value : JSON.stringify(value)
-    console.log('data', data)
     if (Platform.OS !== 'web') {
       try {
         await SecureStore.setItemAsync(key, data);
       } catch (err) {
-        console.error(err)
+        console.log(err)
       }
-      const test = await getValueFor(USER_DATA_KEY)
-      console.log('test', test)
     }
   }
 
   async function getValueFor(key) {
+    if (Platform.OS === 'web') return
     const result = await SecureStore.getItemAsync(key);
     if (result) {
       return JSON.parse(result);
@@ -58,17 +56,22 @@ export const AuthProvider = ({ children }) => {
         .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
         .join('&');
   }
+
   const authorizedRequest = async (route = '', method = 'GET', params = {}) => {
-    const isPost = method === 'POST'
-    const headers = { Authorization: 'Bearer ' + token, ...(isPost && jsonHeaders) }
-    console.log('headers', headers)
-    const url = API_URL + route
-    const response = await fetch(isPost ? url + addParams(params) : url, {method, headers})
-    console.log('response', response)
-    const data = await response.json()
-    console.log('data', data)
-    if (data) {
-      return data
+    try {
+      const isPost = method === 'POST'
+      const headers = { Authorization: 'Bearer ' + token, ...(isPost && jsonHeaders) }
+      console.log('headers', headers)
+      const url = API_URL + route
+      const response = await fetch(isPost ? url + addParams(params) : url, {method, headers})
+      const data = await response.json()
+      console.log('data', data)
+      if (data) {
+        return data
+      }
+    } catch (err) {
+      console.log(err)
+      return {}
     }
   }
 
