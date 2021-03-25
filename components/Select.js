@@ -1,14 +1,14 @@
 import React from 'react'
-import {View, Picker} from 'react-native'
+import {View, Picker, Platform} from 'react-native'
 import {useThemeColor} from './Themed'
 
-const Select = ({selectedValue = 'none', options = [{label: 'None', value: 'none'}], height = 100, onChange = () => {}}) => {
+const Select = ({selectedValue = 'none', options = [{label: 'None', value: 'none'}], height = 90, onChange = () => {}}) => {
   const textColor = useThemeColor({}, 'text');
   return (
     <View style={{ height, width: '100%', overflow: 'hidden'}}>
       <Picker
       selectedValue={selectedValue}
-      style={{ height, width: '100%', top: -(height / 2) }}
+      style={Platform.OS === 'web' ? {height: 40, width: '100%'} :{ height, width: '100%', top: -60 }}
       itemStyle={{color: textColor}}
       onValueChange={(itemValue, itemIndex) => onChange(itemValue)}
       >

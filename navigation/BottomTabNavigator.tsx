@@ -31,6 +31,15 @@ const NavButton = ({title = '', goTo, color = 'blue', navigation}) => (
   />
 )
 
+const NavAction = ({name, family, onPress, color, size=26}) => (
+  <IconButton
+    name={name}
+    family={family}
+    color={color}
+    onPress={onPress}
+  />
+)
+
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
@@ -76,7 +85,7 @@ function TabOneNavigator() {
         component={Tools}
         options={({navigation}) => ({
           headerTitle: 'Tools',
-          headerRight: () => <IconButton name='add' onPress={() => navigation.navigate('AddTool')} size={26}/>
+          headerRight: () => <NavAction name='add' onPress={() => navigation.navigate('AddTool')}/>
         })}
       />
       <TabOneStack.Screen
@@ -103,7 +112,7 @@ function TabTwoNavigator() {
         component={Profile}
         options={({ navigation }) => ({
           headerTitle: 'Profil',
-          headerRight: () => <IconButton name='settings' onPress={() => navigation.navigate('Settings')} size={26}/>
+          headerRight: () => <NavAction name='settings' onPress={() => navigation.navigate('Settings')} size={26}/>
         })}
       />
       <TabTwoStack.Screen
