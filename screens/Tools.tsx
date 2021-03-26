@@ -10,10 +10,6 @@ export default function TabOneScreen() {
   const [query, setQuery] = useState('')
   const {tools, getTools, refreshing} = useTools()
 
-  useEffect(() => {
-    getTools()
-  }, [])
-
   return (
     <View style={styles.container}>
       <TextInput onChangeText={setQuery} style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}/>
@@ -22,12 +18,13 @@ export default function TabOneScreen() {
         style={{width: '100%', flex: 1}}
         keyExtractor={(item, index) => item.name + index}
         ListHeaderComponent={<Spacer height={10} />}
-        renderItem={({item: {name}}) => {
+        renderItem={({item: {name,description}}) => {
           return(
           <TouchableHighlight
           >
             <View style={{ paddingLeft: 20 }}>
               <Text style={styles.title}>{name}</Text>
+              <Text style={styles.description}>{description}</Text>
             </View>
           </TouchableHighlight>
         )}}
@@ -49,6 +46,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 20,
   },
   separator: {
     marginVertical: 30,
