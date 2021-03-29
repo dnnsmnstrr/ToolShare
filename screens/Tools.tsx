@@ -12,7 +12,11 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      <TextInput onChangeText={setQuery} style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}/>
+      <TextInput
+        onChangeText={setQuery}
+        clearButtonMode={'always'}
+        style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}
+      />
       <FlatList
         data={tools.filter(({name}) => name.toLowerCase().includes(query.toLowerCase()))}
         style={{width: '100%', flex: 1}}
@@ -31,8 +35,6 @@ export default function TabOneScreen() {
         refreshing={refreshing}
         onRefresh={getTools}
       />
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
     </View>
   );
 }
