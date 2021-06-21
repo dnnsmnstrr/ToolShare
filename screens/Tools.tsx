@@ -5,9 +5,13 @@ import { Text, View, TextInput } from '../components/Themed';
 import Spacer from '../components/Spacer'
 import useTools from '../hooks/useTools'
 
+const includesLowerCase = (string, query) => {
+  return string.toLowerCase().includes(query.toLowerCase())
+}
+
 export default function TabOneScreen({navigation}) {
   const [query, setQuery] = useState('')
-  const {tools = [], getTools, setSelectedTool, refreshing} = useTools()
+  const {tools = [], getTools, setSelectedTool, refreshing, categories} = useTools()
 
   return (
     <View style={styles.container}>
@@ -17,7 +21,16 @@ export default function TabOneScreen({navigation}) {
         style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}
       />
       <FlatList
-        data={tools.filter(({name}) => name.toLowerCase().includes(query.toLowerCase()))}
+        data={tools.filter(({name, category, ...rest}) => {
+          const {label, value} = categories.find((cat) => cat.value === category) || {}
+          if (label && value) {
+            const categoryString = label + value
+            if (includesLowerCase(categoryString, query)) {
+              return true
+            }
+          }
+          return includesLowerCase(name, query)
+        })}
         style={{width: '100%', flex: 1}}
         keyExtractor={(item, index) => item.name + index}
         ListHeaderComponent={<Spacer height={10} />}
