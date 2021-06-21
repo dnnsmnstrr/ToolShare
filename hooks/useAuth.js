@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
     if (token === 'demo') {
       switch (route) {
         case 'tools':
-          return {_embedded: {tools: [{id: 0, name: 'MC Hammer', type: 'hammer'}]}}
+          return {_embedded: {tools: [{id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'}]}}
         case 'api/tool/add':
           return 'demo'
         default:
