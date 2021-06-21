@@ -1,20 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, FlatList, TouchableHighlight } from 'react-native';
 
 import { Text, View, TextInput } from '../components/Themed';
-import EditScreenInfo from '../components/EditScreenInfo';
 import Spacer from '../components/Spacer'
 import useTools from '../hooks/useTools'
 
-export default function TabOneScreen() {
+export default function TabOneScreen({navigation}) {
   const [query, setQuery] = useState('')
-  const {tools, getTools, refreshing} = useTools()
+  const {tools = [], getTools, setSelectedTool, refreshing} = useTools()
 
   return (
     <View style={styles.container}>
       <TextInput
         onChangeText={setQuery}
-        clearButtonMode={'always'}
+        clearButtonMode='always'
         style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}
       />
       <FlatList
@@ -22,10 +21,12 @@ export default function TabOneScreen() {
         style={{width: '100%', flex: 1}}
         keyExtractor={(item, index) => item.name + index}
         ListHeaderComponent={<Spacer height={10} />}
-        renderItem={({item: {name,description}}) => {
+        renderItem={({item}) => {
+          const {name, description} = item
           return(
-          <TouchableHighlight
-          >
+          <TouchableHighlight onPress={() => {
+            setSelectedTool(item)
+            navigation.navigate('ToolDetails')}}>
             <View style={{ paddingLeft: 20 }}>
               <Text style={styles.title}>{name}</Text>
               <Text style={styles.description}>{description}</Text>

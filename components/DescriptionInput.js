@@ -1,7 +1,7 @@
 import React from 'react'
 import {TextInput} from './Themed'
 
-const ToolInput = ({title = '', value , placeholder, style, onChangeText, ...restProps}) => (
+const ToolInput = ({title = '', value, placeholder, style, onChangeText, ...restProps}) => (
   <TextInput
     style={{
       width: '100%',
@@ -14,7 +14,7 @@ const ToolInput = ({title = '', value , placeholder, style, onChangeText, ...res
     }}
     onChangeText={onChangeText}
     value={value}
-    placeholder={'test'}
+    placeholder={placeholder}
     numberOfLines={4}
     maxLength={300}
     multiline

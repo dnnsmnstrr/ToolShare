@@ -1,16 +1,24 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import useAuth from './useAuth'
 
-export default function useTools() {
+export const ToolContext = React.createContext({})
+
+export const ToolProvider = ({children}) => {
   const {authorizedRequest} = useAuth()
   const [tools, setTools] = useState([])
+  const [selectedTool, setSelectedTool] = useState()
   const [refreshing, setRefreshing] = useState(false)
 
   const getTools = async () => {
     setRefreshing(true)
     const {_embedded: {tools = []} = {}} = await authorizedRequest('tools')
+    console.log('tools', tools)
     setTools(tools)
     setRefreshing(false)
+  }
+
+  const getTool = (id = selectedTool) => {
+    return tools.find((tool) => tool.id === id)
   }
 
   const addTool = async (params) => {
@@ -31,5 +39,11 @@ export default function useTools() {
     { label: 'Andere', value: 'other'}
   ]
 
-  return {tools, getTools, refreshing, addTool, categories}
+  return (
+    <ToolContext.Provider value={{tools, getTools, refreshing, addTool, getTool, selectedTool, setSelectedTool, categories}}>
+      {children}
+    </ToolContext.Provider>
+  )
 }
+
+export default () => useContext(ToolContext)

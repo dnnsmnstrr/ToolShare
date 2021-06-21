@@ -8,8 +8,8 @@ import Select from '../components/Select';
 import Spacer from '../components/Spacer';
 import {useTools, useInfo} from '../hooks'
 
-export default function AddTool() {
-  const {addTool, categories} = useTools()
+export default function ToolDetails() {
+  const {selectedTool} = useTools()
   const {isAndroid, isKeyboardActive} = useInfo()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -36,8 +36,6 @@ export default function AddTool() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       setImage(result.uri);
     }
@@ -46,16 +44,11 @@ export default function AddTool() {
   return (
 
     <KeyboardAvoidingView
-    style={{ flex: 1, width: '100%',justifyContent: 'flex-start',}}
-    behavior={isAndroid ? 'height' : 'padding'} enabled>
+      style={{ flex: 1, width: '100%', justifyContent: 'flex-start'}}
+      behavior={isAndroid ? 'height' : 'padding'} enabled>
       <ScrollView contentContainerStyle={styles.container}>
-        <ToolInput title='Name' style={{marginTop: 30}} onChangeText={setName} />
-        <DescriptionInput placeholder='Description' onChangeText={setDescription} />
-        <Select selectedValue={category} options={categories} onChange={setCategory}/>
-        <Button title="Pick an image from camera roll" onPress={pickImage} />
-        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-        <Button disabled={!name} title="Done" onPress={() => addTool({name, description, category})} />
-        {true && <Spacer height={500} />}
+        <Text>{selectedTool.name}</Text>
+        {selectedTool.image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
       </ScrollView>
       </KeyboardAvoidingView>
   );

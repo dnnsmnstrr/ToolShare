@@ -65,6 +65,9 @@ export default function Login ({ navigation }) {
         <Spacer height={30}/>
         <Button title={registering ? 'Login' : 'Register'} onPress={() => setRegistering(!registering)} />
         {DEBUG && <Text>{API_URL}</Text>}
+        <Button title='Guest' onPress={() => {
+          login({}, false, true)
+        }} />
       </View>}
 
     </CenterView>

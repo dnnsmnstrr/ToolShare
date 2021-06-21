@@ -8,6 +8,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import Icon from '../components/Icon';
 import IconButton from '../components/IconButton';
 import Tools from '../screens/Tools';
+import ToolDetails from '../screens/ToolDetails';
 import AddTool from '../screens/AddTool';
 import Profile from '../screens/Profile';
 import Settings from '../screens/Settings';
@@ -33,6 +34,7 @@ const NavButton = ({title = '', goTo, color = 'blue', navigation}) => (
 
 const NavAction = ({name, family, onPress, color, size=26}) => (
   <IconButton
+    style={{ paddingRight: 10 }}
     name={name}
     family={family}
     color={color}
@@ -95,8 +97,8 @@ function TabOneNavigator() {
       />
       <TabOneStack.Screen
         name="ToolDetails"
-        component={Tools}
-        options={{ headerTitle: 'Tools' }}
+        component={ToolDetails}
+        options={{ headerTitle: 'Tool' }}
       />
     </TabOneStack.Navigator>
   );

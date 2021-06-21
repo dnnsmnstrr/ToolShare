@@ -12,7 +12,7 @@ const Select = ({selectedValue = 'none', options = [{label: 'None', value: 'none
       itemStyle={{color: textColor}}
       onValueChange={(itemValue, itemIndex) => onChange(itemValue)}
       >
-        {options.map((option) => <Picker.Item {...option}/>)}
+        {options.map((option, index) => <Picker.Item key={index} {...option}/>)}
       </Picker>
     </View>
   )

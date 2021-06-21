@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
+import User from '../components/User';
 import { Text, View } from '../components/Themed';
 import useAuth from '../hooks/useAuth'
 
@@ -20,10 +20,7 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <Text style={styles.title}>{email}</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabTwoScreen.tsx" />
+      <User path="/screens/TabTwoScreen.tsx" email={email} />
     </View>
   );
 }

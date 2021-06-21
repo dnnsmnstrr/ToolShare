@@ -4,8 +4,10 @@ import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 
 const { manifest } = Constants;
+
 const LOCAL_SERVER = false
-const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
+
+const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev && false
 ? manifest.debuggerHost.split(':').shift().concat(':8080/')
 : '192.168.0.191:8080/';
 const API_URL = LOCAL_SERVER ? 'http://' + api : 'http://134.122.75.185:8080/'
@@ -16,7 +18,10 @@ const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/j
 export const AuthContext = React.createContext({})
 
 export const AuthProvider = ({ children }) => {
-  const login = async (params, register = false) => {
+  const login = async (params, register = false, guest) => {
+    if (guest) {
+      setToken('guest')
+    }
     try {
       const authRoute = 'api/auth/' + (register ? 'signup' : 'signin')
       const response = await fetch(API_URL + authRoute, {method: 'POST', headers: jsonHeaders, body: JSON.stringify(params)})
@@ -59,6 +64,14 @@ export const AuthProvider = ({ children }) => {
   }
 
   const authorizedRequest = async (route = '', method = 'GET', params = {}) => {
+    if (token === 'guest') {
+      switch (route) {
+        case 'tools':
+          return {_embedded: {tools: [{id: 1, name: 'MC Hammer', type: 'hammer'}]}}
+        default:
+          return
+      }
+    }
     try {
       const isPost = method === 'POST'
       const headers = { Authorization: 'Bearer ' + token, ...(isPost && jsonHeaders) }
