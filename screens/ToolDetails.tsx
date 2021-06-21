@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import { Button, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { Button, StyleSheet, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, TextInput, View } from '../components/Themed';
 import ToolInput from '../components/ToolInput';
 import DescriptionInput from '../components/DescriptionInput';
 import Select from '../components/Select';
 import Spacer from '../components/Spacer';
+import Image from '../components/Image';
 import {useTools, useInfo} from '../hooks'
 
 export default function ToolDetails({navigation}) {
@@ -42,7 +43,7 @@ export default function ToolDetails({navigation}) {
       behavior={isAndroid ? 'height' : 'padding'} enabled>
       <ScrollView contentContainerStyle={styles.container}>
         <Spacer />
-        {selectedTool.image && <Image source={{ uri: selectedTool.image }} style={{ width: 200, height: 200 }} />}
+        {selectedTool.image && <Image url={selectedTool.image} style={{ width: 200, height: 200 }} />}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 20,

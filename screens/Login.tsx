@@ -31,19 +31,42 @@ export default function Login ({ navigation }) {
   const {login, checkingToken = true, API_URL} = useAuth()
   const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState('dennis')
+  const [name, setName] = useState()
+  const [surname, setSurname] = useState()
   const [password, setPassword] = useState('password')
   const [email, setEmail] = useState()
   const [registering, setRegistering] = useState()
 
+  const registeringFieldMissing = registering && (!name || !surname || !email)
   const handleLogin = async () => {
-    if (!username || !password) return
-    await login({username, email, password}, registering)
+    if (!username || !password || registeringFieldMissing) return
+    await login({username, email, password, name, surname}, registering)
     setLoading(true)
   }
 
   return (
     <CenterView>
-      {loading || checkingToken ? <ActivityIndicator /> : <View style={{width: '80%', flexDirection: 'column'}}>
+      {loading || checkingToken ? <ActivityIndicator /> : <View style={{width: '80%',flexDirection: 'column'}}>
+        {registering && <>
+          <LoginInput
+            onChangeText={setName}
+            value={name}
+            placeholder="name"
+            onSubmit={handleLogin}
+          />
+          <LoginInput
+            onChangeText={setSurname}
+            value={surname}
+            placeholder="surname"
+            onSubmit={handleLogin}
+          />
+          <LoginInput
+            onChangeText={setEmail}
+            value={email}
+            placeholder="email"
+            onSubmit={handleLogin}
+          />
+        </>}
         <LoginInput
           onChangeText={setUsername}
           value={username}
@@ -55,19 +78,15 @@ export default function Login ({ navigation }) {
           placeholder="password"
           onSubmit={handleLogin}
         />
-        {registering && <LoginInput
-          onChangeText={setEmail}
-          value={email}
-          placeholder="email"
-          onSubmit={handleLogin}
-        />}
-        <Button disabled={!username || !password} title='Weiter' onPress={handleLogin} />
+        <Button disabled={!username || !password || registeringFieldMissing} title='Weiter' onPress={handleLogin} />
         <Spacer height={30}/>
         <Button title={registering ? 'Login' : 'Register'} onPress={() => setRegistering(!registering)} />
-        {DEBUG && <Text>{API_URL}</Text>}
+      </View>}
+      {DEBUG && <View style={{ alignItems: 'center', paddingTop: 20 }}>
         <Button title='demo' onPress={() => {
           login({}, false, true)
         }} />
+        <Text>{API_URL}</Text>
       </View>}
 
     </CenterView>
