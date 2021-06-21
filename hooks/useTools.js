@@ -23,6 +23,9 @@ export const ToolProvider = ({children}) => {
 
   const addTool = async (params) => {
     const response = await authorizedRequest('api/tool/add', 'POST', params)
+    if (response === 'demo') {
+      setTools([...tools, {id: tools.length, ...params}])
+    }
     console.log('response', response)
   }
 

@@ -18,9 +18,9 @@ const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/j
 export const AuthContext = React.createContext({})
 
 export const AuthProvider = ({ children }) => {
-  const login = async (params, register = false, guest) => {
-    if (guest) {
-      setToken('guest')
+  const login = async (params, register = false, demo) => {
+    if (demo) {
+      setToken('demo')
     }
     try {
       const authRoute = 'api/auth/' + (register ? 'signup' : 'signin')
@@ -64,10 +64,12 @@ export const AuthProvider = ({ children }) => {
   }
 
   const authorizedRequest = async (route = '', method = 'GET', params = {}) => {
-    if (token === 'guest') {
+    if (token === 'demo') {
       switch (route) {
         case 'tools':
-          return {_embedded: {tools: [{id: 1, name: 'MC Hammer', type: 'hammer'}]}}
+          return {_embedded: {tools: [{id: 0, name: 'MC Hammer', type: 'hammer'}]}}
+        case 'api/tool/add':
+          return 'demo'
         default:
           return
       }
