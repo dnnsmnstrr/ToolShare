@@ -18,7 +18,7 @@ export default function TabOneScreen({navigation}) {
       <TextInput
         onChangeText={setQuery}
         clearButtonMode='always'
-        style={{height: 40, borderWidth: 1, borderColor: 'gray', width: '90%', marginTop: 5, paddingHorizontal: 10}}
+        style={{height: 40, borderWidth: 1, borderColor: 'gray', borderRadius: '50%', width: '90%', marginTop: 5, paddingHorizontal: 10}}
       />
       <FlatList
         data={tools.filter(({name, category, ...rest}) => {

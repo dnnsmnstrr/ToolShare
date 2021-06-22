@@ -8,7 +8,7 @@ import Select from '../components/Select';
 import Spacer from '../components/Spacer';
 import {useTools, useInfo} from '../hooks'
 
-export default function AddTool() {
+export default function AddTool({navigation}) {
   const {addTool, categories} = useTools()
   const {isAndroid, isKeyboardActive} = useInfo()
   const [name, setName] = useState('')
@@ -43,8 +43,11 @@ export default function AddTool() {
     }
   };
 
+  const handleAdd = async () => {
+    await addTool({name, description, category})
+    navigation.goBack()
+  }
   return (
-
     <KeyboardAvoidingView
     style={{ flex: 1, width: '100%',justifyContent: 'flex-start',}}
     behavior={isAndroid ? 'height' : 'padding'} enabled>
@@ -54,7 +57,7 @@ export default function AddTool() {
         <Select selectedValue={category} options={categories} onChange={setCategory}/>
         <Button title="Pick an image from camera roll" onPress={pickImage} />
         {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-        <Button disabled={!name} title="Done" onPress={() => addTool({name, description, category})} />
+        <Button disabled={!name} title="Done" onPress={handleAdd} />
         {true && <Spacer height={500} />}
       </ScrollView>
       </KeyboardAvoidingView>
