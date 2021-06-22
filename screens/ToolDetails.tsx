@@ -7,6 +7,7 @@ import DescriptionInput from '../components/DescriptionInput';
 import Select from '../components/Select';
 import Spacer from '../components/Spacer';
 import Image from '../components/Image';
+import RoundedButton from '../components/RoundedButton';
 import {useTools, useInfo} from '../hooks'
 
 export default function ToolDetails({navigation}) {
@@ -15,7 +16,6 @@ export default function ToolDetails({navigation}) {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
-  useEffect(() => console.log('selectedTool', selectedTool), [selectedTool])
 
   useEffect(() => {
     if (selectedTool.name) {
@@ -23,27 +23,15 @@ export default function ToolDetails({navigation}) {
     }
   }, [selectedTool])
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
 
   return (
-
     <KeyboardAvoidingView
       style={{ flex: 1, width: '100%', justifyContent: 'flex-start'}}
       behavior={isAndroid ? 'height' : 'padding'} enabled>
       <ScrollView contentContainerStyle={styles.container}>
         <Spacer />
         {selectedTool.image && <Image url={selectedTool.image} style={{ width: 200, height: 200 }} />}
+        <RoundedButton title='hello' />
       </ScrollView>
     </KeyboardAvoidingView>
   );

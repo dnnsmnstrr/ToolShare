@@ -83,10 +83,10 @@ export default function Login ({ navigation }) {
         <Button title={registering ? 'Login' : 'Register'} onPress={() => setRegistering(!registering)} />
       </View>}
       {DEBUG && <View style={{ alignItems: 'center', paddingTop: 20 }}>
+        <Text>{API_URL}</Text>
         <Button title='demo' onPress={() => {
           login({}, false, true)
         }} />
-        <Text>{API_URL}</Text>
       </View>}
 
     </CenterView>
