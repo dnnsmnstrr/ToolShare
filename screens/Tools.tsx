@@ -22,9 +22,8 @@ export default function Tools({navigation}) {
 
   const renderHeader = <View
       style={{
-        backgroundColor: '#fff',
         padding: 20,
-        alignItems: 'center',
+           alignItems: 'center',
         justifyContent: 'center'
       }}>
 
@@ -34,12 +33,11 @@ export default function Tools({navigation}) {
         onChangeText={setQuery}
         placeholder='Search'
         clearButtonMode='always'
-        style={{height: 40, borderWidth: 1, borderColor: 'gray', borderRadius: '50%', width: '100%', marginTop: 5, paddingHorizontal: 20}}
+        style={{height: 40, borderWidth: 1, borderColor: 'gray', borderRadius: 25, width: '100%', marginTop: 5, paddingHorizontal: 20}}
       />
     </View>
 
   const onScroll = (event) => {
-    // console.log('event.nativeEvent', event.nativeEvent)
     const {contentOffset: {y: currentScroll}, contentSize, layoutMeasurement} = event.nativeEvent
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setShowSearchBar(lastScroll > currentScroll && currentScroll + layoutMeasurement.height < contentSize.height)

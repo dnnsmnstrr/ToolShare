@@ -9,4 +9,13 @@ const Spacer = ({width = 0, height = 0, flex}) => {
   return <View style={{ width, height, flex: flex ? Number(flex) : null}} />
 }
 
+const EvenlySpace = ({ children, ...spacerProps }) => {
+  return children.map((child, index) => (
+    <React.Fragment key={index}>
+      {child}
+      {child && <Spacer {...spacerProps} />}
+    </React.Fragment>
+  ))
+}
+export { EvenlySpace }
 export default Spacer

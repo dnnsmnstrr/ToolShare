@@ -5,7 +5,7 @@ import * as SecureStore from 'expo-secure-store';
 
 const { manifest } = Constants;
 
-const LOCAL_SERVER = false
+const LOCAL_SERVER = true
 
 const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev && false
 ? manifest.debuggerHost.split(':').shift().concat(':8080/')
@@ -18,32 +18,7 @@ const getDemoData = (route) => {
   switch (route) {
     case 'tools':
       return {_embedded: {tools: [
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg', latitude: 41.84201, longitude: -89.485937}
       ]}}
     case 'api/tool/add':
       return 'demo'
@@ -55,17 +30,21 @@ const getDemoData = (route) => {
 export const AuthContext = React.createContext({})
 
 export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState()
+
   const login = async (params, register = false, demo) => {
     if (demo) {
       setToken('demo')
+      storeValue({accessToken: 'demo', email: 'demo@example.com'})
     }
     try {
       const authRoute = 'api/auth/' + (register ? 'signup' : 'signin')
       const response = await fetch(API_URL + authRoute, {method: 'POST', headers: jsonHeaders, body: JSON.stringify(params)})
-      const {accessToken, email} = await response.json();
+      const {accessToken, ...user} = await response.json();
       if (accessToken) {
         setToken(accessToken)
-        storeValue({accessToken, email})
+        setUser(user)
+        storeValue({accessToken, ...user})
       }
     } catch (err) {
       console.error(err)
@@ -107,7 +86,7 @@ export const AuthProvider = ({ children }) => {
       const headers = { Authorization: 'Bearer ' + token, ...(isPost && jsonHeaders) }
       console.log('headers', headers)
       const url = API_URL + route
-      const response = await fetch(isPost ? url + addParams(params) : url, {method, headers})
+      const response = await fetch(isPost ? url + addParams({...params, user_id: user.id}) : url, {method, headers})
       const data = await response.json()
       console.log('data', data)
       if (data) {
@@ -137,7 +116,9 @@ export const AuthProvider = ({ children }) => {
 
   const getUser = async () => {
     const user = await getValueFor(USER_DATA_KEY)
-    console.log(user)
+    if (user) {
+      setUser(user)
+    }
     return user
   }
 
@@ -146,7 +127,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ token, checkingToken, login, logout, getUser, authorizedRequest, API_URL }}>
+    <AuthContext.Provider value={{ token, checkingToken, login, logout, user, getUser, authorizedRequest, API_URL }}>
       {children}
     </AuthContext.Provider>
   )

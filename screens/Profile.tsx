@@ -6,21 +6,11 @@ import { Text, View } from '../components/Themed';
 import useAuth from '../hooks/useAuth'
 
 export default function TabTwoScreen() {
-  const {getUser} = useAuth()
-  const [email, setEmail] = useState()
-  const updateUser = async () => {
-    const user = await getUser()
-    if (user && user.email) {
-      setEmail(user.email)
-    }
-  }
-  useEffect(() => {
-    updateUser()
-  }, [])
-
+  const {user} = useAuth()
+  useEffect(() => console.log('user', user), [user])
   return (
     <View style={styles.container}>
-      <User path="/screens/TabTwoScreen.tsx" email={email} />
+      {user && <User path="/screens/TabTwoScreen.tsx" {...user} />}
     </View>
   );
 }
