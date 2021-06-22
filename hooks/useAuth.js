@@ -14,6 +14,43 @@ const API_URL = LOCAL_SERVER ? 'http://' + api : 'http://134.122.75.185:8080/'
 
 const USER_DATA_KEY='user_data'
 const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json'}
+const getDemoData = (route) => {
+  switch (route) {
+    case 'tools':
+      return {_embedded: {tools: [
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'},
+      ]}}
+    case 'api/tool/add':
+      return 'demo'
+    default:
+      return
+  }
+}
 
 export const AuthContext = React.createContext({})
 
@@ -64,16 +101,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const authorizedRequest = async (route = '', method = 'GET', params = {}) => {
-    if (token === 'demo') {
-      switch (route) {
-        case 'tools':
-          return {_embedded: {tools: [{id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg'}]}}
-        case 'api/tool/add':
-          return 'demo'
-        default:
-          return
-      }
-    }
+    if (token === 'demo') return getDemoData(route)
     try {
       const isPost = method === 'POST'
       const headers = { Authorization: 'Bearer ' + token, ...(isPost && jsonHeaders) }

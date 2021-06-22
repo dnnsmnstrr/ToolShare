@@ -1,5 +1,10 @@
 import React, {useState} from 'react';
-import { StyleSheet, FlatList, TouchableHighlight } from 'react-native';
+import {
+  StyleSheet,
+  FlatList,
+  TouchableHighlight,
+  LayoutAnimation
+} from 'react-native';
 
 import { Text, View, TextInput } from '../components/Themed';
 import Spacer from '../components/Spacer'
@@ -9,17 +14,40 @@ const includesLowerCase = (string, query) => {
   return string.toLowerCase().includes(query.toLowerCase())
 }
 
-export default function TabOneScreen({navigation}) {
+export default function Tools({navigation}) {
   const [query, setQuery] = useState('')
+  const [lastScroll, setLastScroll] = useState(0)
+  const [showSearchBar, setShowSearchBar] = useState(true)
   const {tools = [], getTools, setSelectedTool, refreshing, categories} = useTools()
+
+  const renderHeader = <View
+      style={{
+        backgroundColor: '#fff',
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+
+      <TextInput
+        value={query}
+        autoCorrect={false}
+        onChangeText={setQuery}
+        placeholder='Search'
+        clearButtonMode='always'
+        style={{height: 40, borderWidth: 1, borderColor: 'gray', borderRadius: '50%', width: '100%', marginTop: 5, paddingHorizontal: 20}}
+      />
+    </View>
+
+  const onScroll = (event) => {
+    // console.log('event.nativeEvent', event.nativeEvent)
+    const {contentOffset: {y: currentScroll}, contentSize, layoutMeasurement} = event.nativeEvent
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setShowSearchBar(lastScroll > currentScroll && currentScroll + layoutMeasurement.height < contentSize.height)
+    setLastScroll(event.nativeEvent.contentOffset.y)
+  }
 
   return (
     <View style={styles.container}>
-      <TextInput
-        onChangeText={setQuery}
-        clearButtonMode='always'
-        style={{height: 40, borderWidth: 1, borderColor: 'gray', borderRadius: '50%', width: '90%', marginTop: 5, paddingHorizontal: 10}}
-      />
       <FlatList
         data={tools.filter(({name, category, ...rest}) => {
           const {label, value} = categories.find((cat) => cat.value === category) || {}
@@ -33,7 +61,8 @@ export default function TabOneScreen({navigation}) {
         })}
         style={{width: '100%', flex: 1}}
         keyExtractor={(item, index) => item.name + index}
-        ListHeaderComponent={<Spacer height={10} />}
+        ListHeaderComponent={renderHeader}
+        stickyHeaderIndices={showSearchBar ? [0] : null}
         renderItem={({item}) => {
           const {name, description} = item
           return(
@@ -48,6 +77,7 @@ export default function TabOneScreen({navigation}) {
         )}}
         refreshing={refreshing}
         onRefresh={getTools}
+        onScroll={onScroll}
       />
     </View>
   );
