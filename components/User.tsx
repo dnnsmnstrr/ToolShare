@@ -3,25 +3,30 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
 import { Text, View, TextInput } from './Themed';
 
-const InfoItem = ({label, value}) => <View style={{ flexDirection: 'row' }}>
+const InfoItem = ({label, value}) => <View style={styles.listItem}>
   <Text>{label}: </Text>
   <TextInput value={String(value)} />
 </View>
-export default function User({ email, id }: { email: string }) {
+
+export default function User(info) {
+  console.log('info', info)
   return (
-    <View>
-      <View style={{ flexDirection: 'row' }}>
-        <Text>Email: </Text>
-        <TextInput value={email} />
-      </View>
-      <InfoItem label='id' value={id} />
+    <View style={styles.container}>
+      {Object.keys(info).map((key) => <InfoItem key={key} label={key} value={info[key]} />)}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-
+  container: {
+    width: '80%',
+  },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingBottom: 20,
+  }
 });

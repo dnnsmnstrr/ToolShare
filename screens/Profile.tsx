@@ -5,12 +5,13 @@ import User from '../components/User';
 import { Text, View } from '../components/Themed';
 import useAuth from '../hooks/useAuth'
 
-export default function TabTwoScreen() {
-  const {user} = useAuth()
-  useEffect(() => console.log('user', user), [user])
+export default function Profile() {
+  const {user = {}} = useAuth()
+  const {username, email, id} = user
+
   return (
     <View style={styles.container}>
-      {user && <User path="/screens/TabTwoScreen.tsx" {...user} />}
+      {user && <User {...{username, email, id}} />}
     </View>
   );
 }
@@ -20,14 +21,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+    paddingHorizontal: 20
   },
 });

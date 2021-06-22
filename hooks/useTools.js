@@ -11,10 +11,11 @@ export const ToolProvider = ({children}) => {
 
   const getTools = async () => {
     setRefreshing(true)
-    const {_embedded: {tools = []} = {}} = await authorizedRequest('tools')
-    console.log('tools', tools)
-    setTools(tools)
-    setRefreshing(false)
+    const tools = await authorizedRequest('api/tool/available')
+    if (tools && tools.length) {
+      setTools(tools)
+      setRefreshing(false)
+    }
   }
 
   const getTool = (id = selectedTool) => {

@@ -7,6 +7,8 @@ import ToolInput from '../components/ToolInput';
 import DescriptionInput from '../components/DescriptionInput';
 import Select from '../components/Select';
 import Spacer from '../components/Spacer';
+import RoundedButton from '../components/RoundedButton';
+import IconButton from '../components/IconButton';
 import {useTools, useInfo} from '../hooks'
 
 export default function AddTool({navigation}) {
@@ -81,12 +83,15 @@ export default function AddTool({navigation}) {
         <ToolInput title='Name' style={{marginTop: 30}} onChangeText={setName} />
         <DescriptionInput placeholder='Description' onChangeText={setDescription} />
         <Select selectedValue={category} options={categories} onChange={setCategory}/>
-        <Button title="Pick an image from camera roll" onPress={pickImage} />
-        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+        <IconButton name='camera' family='ionic' title="Add image" onPress={pickImage} />
+        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, paddingVertical: 10 }} />}
+        <Spacer height={50} />
         <Text>{text}</Text>
-        <Button disabled={!name} title="Done" onPress={handleAdd} />
-        {true && <Spacer height={500} />}
       </ScrollView>
+      <View style={{ paddingHorizontal: 20 }}>
+        <RoundedButton disabled={!name} title="Done" onPress={handleAdd} style={{ paddingHorizontal: 20 }} />
+        <Spacer height={50} />
+      </View>
       </KeyboardAvoidingView>
   );
 }

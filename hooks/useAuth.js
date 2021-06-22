@@ -42,6 +42,7 @@ export const AuthProvider = ({ children }) => {
       const response = await fetch(API_URL + authRoute, {method: 'POST', headers: jsonHeaders, body: JSON.stringify(params)})
       const {accessToken, ...user} = await response.json();
       if (accessToken) {
+        console.log('accessToken', accessToken)
         setToken(accessToken)
         setUser(user)
         storeValue({accessToken, ...user})
@@ -124,6 +125,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     getToken()
+    getUser()
   }, [])
 
   return (
