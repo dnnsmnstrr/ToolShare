@@ -12,7 +12,7 @@ const RoundedButton = ({title, color = '#fff', style, textStyle, disabled, onPre
         alignItems: 'center',
         width: '100%',
         backgroundColor: disabled ? 'grey' : '#2f95dc',
-        borderRadius: '50%',
+        borderRadius: 30,
         ...style
       }}
       {...restProps}

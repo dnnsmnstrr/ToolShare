@@ -40,7 +40,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const authRoute = 'api/auth/' + (register ? 'signup' : 'signin')
       const response = await fetch(API_URL + authRoute, {method: 'POST', headers: jsonHeaders, body: JSON.stringify(params)})
-      console.log('response', response)
       if (response.error) {
         throw new Error(response.message)
       }
@@ -52,7 +51,7 @@ export const AuthProvider = ({ children }) => {
         storeValue({accessToken, ...user})
       }
     } catch (err) {
-      console.error(err)
+      console.log(err)
     }
   }
 

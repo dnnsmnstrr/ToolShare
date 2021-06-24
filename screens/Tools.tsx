@@ -19,19 +19,19 @@ export default function Tools({navigation}) {
   const [query, setQuery] = useState('')
   const [lastScroll, setLastScroll] = useState(0)
   const [showSearchBar, setShowSearchBar] = useState(true)
+  const [animating, setAnimating] = useState(false)
   const {tools = [], getTools, setSelectedTool, refreshing, categories} = useTools()
   const {user} = useAuth()
 
   useEffect(() => {
     getTools()
   }, [])
-  const renderHeader = <View
+  const renderHeader = showSearchBar ? <View
       style={{
         padding: 20,
            alignItems: 'center',
         justifyContent: 'center'
       }}>
-
       <TextInput
         value={query}
         autoCorrect={false}
@@ -40,20 +40,25 @@ export default function Tools({navigation}) {
         clearButtonMode='always'
         style={{height: 40, borderWidth: 1, borderColor: 'gray', borderRadius: 25, width: '100%', marginTop: 5, paddingHorizontal: 20}}
       />
-    </View>
+    </View> : <View />
 
   const onScroll = (event) => {
     const {contentOffset: {y: currentScroll}, contentSize, layoutMeasurement} = event.nativeEvent
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setShowSearchBar(lastScroll > currentScroll && currentScroll + layoutMeasurement.height < contentSize.height)
-    setLastScroll(event.nativeEvent.contentOffset.y)
+    console.log('lastScroll, currentScroll, layoutMeasurement, contentSize', lastScroll, currentScroll, layoutMeasurement, contentSize)
+    // console.log('currentScroll + layoutMeasurement.height < contentSize.height', currentScroll + layoutMeasurement.height < contentSize.height)
+    setShowSearchBar(currentScroll <= 0 || (lastScroll >= currentScroll && currentScroll + layoutMeasurement.height < contentSize.height) || contentSize.height < layoutMeasurement.height)
+    if (!animating) {
+      setAnimating(true)
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut, () => setAnimating(false))
+    }
+    setLastScroll(currentScroll)
   }
 
   return (
     <View style={styles.container}>
       <FlatList
         data={tools.filter(({name, category, user: {id}, ...rest}) => {
-          const belongsToUser = user.id === id
+          const belongsToUser = user && user.id === id
           if (belongsToUser) {
             return false
           }
@@ -69,7 +74,7 @@ export default function Tools({navigation}) {
         style={{width: '100%', flex: 1}}
         keyExtractor={(item, index) => item.name + index}
         ListHeaderComponent={renderHeader}
-        stickyHeaderIndices={showSearchBar ? [0] : null}
+        stickyHeaderIndices={[0]}
         renderItem={({item}) => {
           const {name, description} = item
           return(
