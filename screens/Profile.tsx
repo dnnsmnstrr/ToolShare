@@ -12,7 +12,7 @@ import SwipeableRow from '../components/SwipeableRow'
 
 export default function Profile() {
   const {user = {}} = useAuth()
-  const {userTools, getUserTools, deleteTool, refreshing} = useTools()
+  const {userTools, getUserTools, deleteTool, toggleAvailability, refreshing} = useTools()
   const {username, email, id} = user
 
   useEffect(() => {
@@ -33,9 +33,9 @@ export default function Profile() {
       )
     }
     return <SwipeableRow onDelete={onDelete}>
-      <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingBottom: 8 }}>
+      <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
         <Text key={index}>{item.name}</Text>
-        <Switch />
+        <Switch value={item.available} onValueChange={() => toggleAvailability(item.id, !item.available)}/>
       </View>
     </SwipeableRow>
   }

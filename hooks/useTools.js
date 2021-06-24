@@ -40,6 +40,18 @@ export const ToolProvider = ({children}) => {
     getUserTools()
   }
 
+  const toggleAvailability = async (id, available) => {
+    const response = await authorizedRequest('api/tool/setavailable', {id, available: available ? 1 : 0}, 'PUT')
+    const newTools = [...userTools]
+    const toolIndex = newTools.findIndex((tool) => tool.id === id)
+    console.log('toolIndex', toolIndex)
+    newTools[toolIndex].available = available
+    setUserTools(newTools)
+    if (response !== 'demo') {
+      getUserTools()
+    }
+  }
+
   const addTool = async (params) => {
     const response = await authorizedRequest('api/tool/add', {...params, user: user.id}, 'POST')
     if (response === 'demo') {
@@ -75,7 +87,7 @@ export const ToolProvider = ({children}) => {
     }
   }, [user])
   return (
-    <ToolContext.Provider value={{tools, getTools, refreshing, addTool, getTool, deleteTool, userTools, getUserTools, selectedTool, setSelectedTool, resetTools, categories}}>
+    <ToolContext.Provider value={{tools, getTools, refreshing, addTool, getTool, deleteTool, toggleAvailability, userTools, getUserTools, selectedTool, setSelectedTool, resetTools, categories}}>
       {children}
     </ToolContext.Provider>
   )
