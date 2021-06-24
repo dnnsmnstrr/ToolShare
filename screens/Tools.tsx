@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -20,6 +20,9 @@ export default function Tools({navigation}) {
   const [showSearchBar, setShowSearchBar] = useState(true)
   const {tools = [], getTools, setSelectedTool, refreshing, categories} = useTools()
 
+  useEffect(() => {
+    getTools()
+  }, [])
   const renderHeader = <View
       style={{
         padding: 20,

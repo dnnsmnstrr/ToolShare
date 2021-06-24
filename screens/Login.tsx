@@ -5,6 +5,7 @@ import { ActivityIndicator, Button, Platform } from 'react-native'
 import { TextInput, View, Text } from '../components/Themed';
 import useAuth from '../hooks/useAuth'
 import CenterView from '../components/CenterView';
+import RoundedButton from '../components/RoundedButton';
 import Spacer from '../components/Spacer';
 
 const DEBUG = true
@@ -17,7 +18,7 @@ const LoginInput = ({title = '', value, placeholder, onChangeText, ...restProps}
     borderColor: 'gray',
     borderWidth: 1,
     paddingLeft: 10,
-    marginBottom: 20,
+    marginVertical: 10,
   }}
     onChangeText={onChangeText}
     value={value}
@@ -44,6 +45,7 @@ export default function Login ({ navigation }) {
     setLoading(true)
   }
 
+  const isPasswordLengthCorrect = password.length < 6
   return (
     <CenterView>
       {loading || checkingToken ? <ActivityIndicator /> : <View style={{width: '80%',flexDirection: 'column'}}>
@@ -78,12 +80,13 @@ export default function Login ({ navigation }) {
           placeholder="password"
           onSubmit={handleLogin}
         />
-        <Button disabled={!username || !password || registeringFieldMissing} title='Weiter' onPress={handleLogin} />
+        {registering && isPasswordLengthCorrect && <Text style={{ color: 'red' }}>Passwort muss mindestens 6 Zeichen lang sein</Text>}
+        <Spacer height={10}/>
+        <RoundedButton disabled={!username || !password || isPasswordLengthCorrect || registeringFieldMissing} title='Weiter' onPress={handleLogin} />
         <Spacer height={30}/>
         <Button title={registering ? 'Login' : 'Register'} onPress={() => setRegistering(!registering)} />
       </View>}
       {DEBUG && <View style={{ alignItems: 'center', paddingTop: 20 }}>
-        <Text>{API_URL}</Text>
         <Button title='demo' onPress={() => {
           login({}, false, true)
         }} />

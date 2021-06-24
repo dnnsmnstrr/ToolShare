@@ -20,13 +20,13 @@ export const ToolProvider = ({children}) => {
   }
 
   const getUserTools = async () => {
-    // setRefreshing(true)
+    setRefreshing(true)
     console.log('user.id', user.id)
     const tools = await authorizedRequest('api/tool/user', {user: user.id})
     console.log('tools', tools)
     if (tools && tools.length) {
       setUserTools(tools)
-      // setRefreshing(false)
+      setRefreshing(false)
     }
   }
 

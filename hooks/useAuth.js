@@ -40,6 +40,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const authRoute = 'api/auth/' + (register ? 'signup' : 'signin')
       const response = await fetch(API_URL + authRoute, {method: 'POST', headers: jsonHeaders, body: JSON.stringify(params)})
+      console.log('response', response)
+      if (response.error) {
+        throw new Error(response.message)
+      }
       const {accessToken, ...user} = await response.json();
       if (accessToken) {
         console.log('accessToken', accessToken)
@@ -81,6 +85,9 @@ export const AuthProvider = ({ children }) => {
   }
 
   const authorizedRequest = async (route = '', params = {}, method = 'GET') => {
+    if (!token) {
+      throw new Error('missing token')
+    }
     if (token === 'demo') return getDemoData(route)
     try {
       const isPost = method === 'POST'
@@ -104,6 +111,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     SecureStore.deleteItemAsync(USER_DATA_KEY);
     setToken(null)
+    setUser(undefined)
   }
 
   const [token, setToken] = useState()
