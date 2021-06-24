@@ -4,8 +4,9 @@ import useAuth from './useAuth'
 export const ToolContext = React.createContext({})
 
 export const ToolProvider = ({children}) => {
-  const {authorizedRequest} = useAuth()
+  const {authorizedRequest, user} = useAuth()
   const [tools, setTools] = useState([])
+  const [userTools, setUserTools] = useState([])
   const [selectedTool, setSelectedTool] = useState()
   const [refreshing, setRefreshing] = useState(false)
 
@@ -18,20 +19,33 @@ export const ToolProvider = ({children}) => {
     }
   }
 
+  const getUserTools = async () => {
+    // setRefreshing(true)
+    console.log('user.id', user.id)
+    const tools = await authorizedRequest('api/tool/user', {user: user.id})
+    console.log('tools', tools)
+    if (tools && tools.length) {
+      setUserTools(tools)
+      // setRefreshing(false)
+    }
+  }
+
   const getTool = (id = selectedTool) => {
     return tools.find((tool) => tool.id === id)
   }
 
   const addTool = async (params) => {
-    const response = await authorizedRequest('api/tool/add', 'POST', params)
+    const response = await authorizedRequest('api/tool/add', params, 'POST')
     if (response === 'demo') {
       setTools([...tools, {id: tools.length, ...params}])
     }
-    console.log('response', response)
   }
 
   useEffect(() => {
     getTools()
+    if (user && user.id) {
+      getUserTools()
+    }
   }, [])
 
   // TODO: fetch categories dynamically
@@ -43,8 +57,19 @@ export const ToolProvider = ({children}) => {
     { label: 'Andere', value: 'other'}
   ]
 
+  const resetTools = () => {
+    setTools([])
+    setUserTools([])
+  }
+
+  useEffect(() => {
+    if (!user) {
+      console.log('resetting tools')
+      resetTools()
+    }
+  }, [user])
   return (
-    <ToolContext.Provider value={{tools, getTools, refreshing, addTool, getTool, selectedTool, setSelectedTool, categories}}>
+    <ToolContext.Provider value={{tools, getTools, refreshing, addTool, getTool, userTools, getUserTools, selectedTool, setSelectedTool, resetTools, categories}}>
       {children}
     </ToolContext.Provider>
   )

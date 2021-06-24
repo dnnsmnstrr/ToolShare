@@ -11,7 +11,6 @@ const InfoItem = ({label, value}) => <View style={styles.listItem}>
 </View>
 
 export default function User(info) {
-  console.log('info', info)
   return (
     <View style={styles.container}>
       {Object.keys(info).map((key) => <InfoItem key={key} label={key} value={info[key]} />)}

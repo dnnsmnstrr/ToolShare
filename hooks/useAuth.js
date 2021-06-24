@@ -16,10 +16,10 @@ const USER_DATA_KEY='user_data'
 const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json'}
 const getDemoData = (route) => {
   switch (route) {
-    case 'tools':
-      return {_embedded: {tools: [
+    case 'api/tool/available':
+      return [
         {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg', latitude: 41.84201, longitude: -89.485937}
-      ]}}
+      ]
     case 'api/tool/add':
       return 'demo'
     default:
@@ -80,16 +80,18 @@ export const AuthProvider = ({ children }) => {
         .join('&');
   }
 
-  const authorizedRequest = async (route = '', method = 'GET', params = {}) => {
+  const authorizedRequest = async (route = '', params = {}, method = 'GET') => {
     if (token === 'demo') return getDemoData(route)
     try {
       const isPost = method === 'POST'
       const headers = { Authorization: 'Bearer ' + token, ...(isPost && jsonHeaders) }
       console.log('headers', headers)
+      console.log('params', params)
       const url = API_URL + route
-      const response = await fetch(isPost ? url + addParams({...params, user_id: user.id}) : url, {method, headers})
+      console.log('url', url)
+      const response = await fetch(url + addParams(params), {method, headers})
       const data = await response.json()
-      console.log('data', data)
+      // console.log('data', data)
       if (data) {
         return data
       }

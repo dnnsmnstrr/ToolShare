@@ -11,7 +11,7 @@ import useAuth from '../hooks/useAuth'
 const DEV_MODE = true
 const options = DEV_MODE ? Object.keys(families).map(family => ({value: family, label: family})) : []
 export default function Settings() {
-  const {user, logout} = useAuth()
+  const {user, logout, API_URL} = useAuth()
   const [icon, setIconName] = useState('error')
   const [selectedFamily, setSelectedFamily] = useState(options[0].value)
   const [outlined, setOutlined] = useState(false)
@@ -27,6 +27,10 @@ export default function Settings() {
           <Switch value={outlined} onValueChange={setOutlined}/>
         </View>
         <Select options={options} selectedValue={selectedFamily} onChange={setSelectedFamily} />
+        <View style={styles.listItem}>
+          <Text>Backend-URL: </Text>
+          <Text>{API_URL}</Text>
+        </View>
       </View>}
     </View>
   );
