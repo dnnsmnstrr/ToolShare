@@ -34,8 +34,15 @@ export const ToolProvider = ({children}) => {
     return tools.find((tool) => tool.id === id)
   }
 
+  const deleteTool = async (id = selectedTool) => {
+    const response = await authorizedRequest('api/tool/del', {id}, 'DELETE')
+    if (response === 'demo') {
+      setTools(tools.filter((tool) => tool.id !== id))
+    }
+  }
+
   const addTool = async (params) => {
-    const response = await authorizedRequest('api/tool/add', params, 'POST')
+    const response = await authorizedRequest('api/tool/add', {...params, user: user.id}, 'POST')
     if (response === 'demo') {
       setTools([...tools, {id: tools.length, ...params}])
     }
@@ -69,7 +76,7 @@ export const ToolProvider = ({children}) => {
     }
   }, [user])
   return (
-    <ToolContext.Provider value={{tools, getTools, refreshing, addTool, getTool, userTools, getUserTools, selectedTool, setSelectedTool, resetTools, categories}}>
+    <ToolContext.Provider value={{tools, getTools, refreshing, addTool, getTool, deleteTool, userTools, getUserTools, selectedTool, setSelectedTool, resetTools, categories}}>
       {children}
     </ToolContext.Provider>
   )

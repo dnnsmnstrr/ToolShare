@@ -92,11 +92,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const isPost = method === 'POST'
       const headers = { Authorization: 'Bearer ' + token, ...(isPost && jsonHeaders) }
-      console.log('headers', headers)
-      console.log('params', params)
+      // console.log('headers', headers)
+      // console.log('params', params)
       const url = API_URL + route
-      console.log('url', url)
-      const response = await fetch(url + addParams(params), {method, headers})
+      // console.log('url', url)
+      const response = await fetch(url + addParams({...params, user_id: user ? user.id : 0}), {method, headers})
+      console.log('response', response)
       const data = await response.json()
       // console.log('data', data)
       if (data) {

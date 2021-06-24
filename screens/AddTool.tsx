@@ -13,7 +13,7 @@ import {useTools, useInfo} from '../hooks'
 
 export default function AddTool({navigation}) {
   const {addTool, categories, getTools} = useTools()
-  const {isAndroid, isKeyboardActive} = useInfo()
+  const {isAndroid} = useInfo()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState(categories[0] ? categories[0].value : 'hammer')
@@ -63,7 +63,15 @@ export default function AddTool({navigation}) {
   };
 
   const handleAdd = async () => {
-    await addTool({name, description, category, latitude: location.coords.latitude, longitude: location.coords.longitude, image, isAvailable: true})
+    await addTool({
+      name,
+      description,
+      category,
+      image,
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      isAvailable: true,
+    })
     await getTools()
     navigation.goBack()
   }
