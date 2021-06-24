@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Animated, Alert, SectionList, StyleSheet } from 'react-native';
+import { Animated, Alert, SectionList, StyleSheet, Switch } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { RectButton } from 'react-native-gesture-handler';
 import User from '../components/User';
@@ -21,21 +21,21 @@ export default function Profile() {
 
 
   const renderPersonalTool = ({ item, index, section: { title, data } }) => {
-
-    return <SwipeableRow >
+    const onDelete = () => {
+      Alert.alert(
+        'Werkzeug löschen',
+        `Sind sie sicher dass sie ${item.name} löschen wollen?`,
+        [
+          {text: 'Abbrechen', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {text: 'Löschen', onPress: () => deleteTool(item.id), style: 'destructive'},
+        ],
+        { cancelable: false }
+      )
+    }
+    return <SwipeableRow onDelete={onDelete}>
       <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingBottom: 8 }}>
         <Text key={index}>{item.name}</Text>
-        <IconButton name='trash' family='feather'
-          onPress={() => Alert.alert(
-            'Werkzeug löschen',
-            `Sind sie sicher dass sie ${item.name} löschen wollen?`,
-            [
-              {text: 'Abbrechen', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-              {text: 'Löschen', onPress: () => deleteTool(item.id), style: 'destructive'},
-            ],
-            { cancelable: false }
-          )}
-        />
+        <Switch />
       </View>
     </SwipeableRow>
   }
