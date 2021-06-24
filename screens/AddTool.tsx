@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import { Button, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { Button, StyleSheet, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { Text, TextInput, View } from '../components/Themed';
 import ToolInput from '../components/ToolInput';
+import Image from '../components/Image';
 import DescriptionInput from '../components/DescriptionInput';
 import Select from '../components/Select';
 import Spacer from '../components/Spacer';
@@ -91,13 +92,17 @@ export default function AddTool({navigation}) {
         <ToolInput title='Name' style={{marginTop: 30}} onChangeText={setName} />
         <DescriptionInput placeholder='Description' onChangeText={setDescription} />
         <Select selectedValue={category} options={categories} onChange={setCategory}/>
-        <IconButton name='camera' family='ionic' title="Add image" onPress={pickImage} />
-        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, paddingVertical: 10 }} />}
+        {!image && <IconButton name='camera' family='ionic' title="Add image" onPress={pickImage} />}
+        {image && <Image
+          source={{ uri: image }}
+          onPress={pickImage}
+          style={{ paddingVertical: 10 }}
+        />}
         <Spacer height={50} />
         <Text>{text}</Text>
       </ScrollView>
       <View style={{ paddingHorizontal: 20 }}>
-        <RoundedButton disabled={!name} title="Done" onPress={handleAdd} style={{ paddingHorizontal: 20 }} />
+        <RoundedButton disabled={!name} title="Fertig" onPress={handleAdd} style={{ paddingHorizontal: 20 }} />
         <Spacer height={50} />
       </View>
       </KeyboardAvoidingView>

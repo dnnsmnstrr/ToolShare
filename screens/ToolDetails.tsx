@@ -51,7 +51,7 @@ export default function ToolDetails({navigation}) {
               <Marker coordinate={{latitude, longitude}} title={selectedTool.name} description={selectedTool.description}/>
             </MapView>
           </View>
-          <RoundedButton title='hello' />
+          <RoundedButton title='Leihe anfragen' />
         </EvenlySpace>
       </ScrollView>
     </KeyboardAvoidingView>

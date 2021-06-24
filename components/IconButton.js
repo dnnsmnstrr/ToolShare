@@ -9,7 +9,7 @@ const IconButton = ({name = 'error', family = 'material', size = 32, title, ligh
     <TouchableOpacity onPress={onPress} style={{ justifyContent: 'center', alignItems: 'center', ...style }}>
       <Icon name={name} family={family} color={themeColor} size={size} focused={focused}/>
       {title &&
-       <Text style={{ fontSize: title.length === 1 ? 40 : 20, themeColor, paddingHorizontal: 10, marginTop: title.length === 1 ? -8 : -2, ...textStyle}}>
+       <Text style={{ fontSize: title.length === 1 ? 40 : 20, color: themeColor, paddingHorizontal: 10, marginTop: title.length === 1 ? -8 : -2, ...textStyle}}>
          {title}
        </Text>}
     </TouchableOpacity>

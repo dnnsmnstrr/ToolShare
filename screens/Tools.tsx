@@ -44,8 +44,6 @@ export default function Tools({navigation}) {
 
   const onScroll = (event) => {
     const {contentOffset: {y: currentScroll}, contentSize, layoutMeasurement} = event.nativeEvent
-    console.log('lastScroll, currentScroll, layoutMeasurement, contentSize', lastScroll, currentScroll, layoutMeasurement, contentSize)
-    // console.log('currentScroll + layoutMeasurement.height < contentSize.height', currentScroll + layoutMeasurement.height < contentSize.height)
     setShowSearchBar(currentScroll <= 0 || (lastScroll >= currentScroll && currentScroll + layoutMeasurement.height < contentSize.height) || contentSize.height < layoutMeasurement.height)
     if (!animating) {
       setAnimating(true)

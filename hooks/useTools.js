@@ -37,6 +37,7 @@ export const ToolProvider = ({children}) => {
     if (response === 'demo') {
       setTools(tools.filter((tool) => tool.id !== id))
     }
+    getUserTools()
   }
 
   const addTool = async (params) => {

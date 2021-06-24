@@ -7,6 +7,7 @@ const RoundedButton = ({title, color = '#fff', style, textStyle, disabled, onPre
   return (
     <TouchableOpacity
       onPress={onPress}
+      disabled={disabled}
       style={{
         justifyContent: 'center',
         alignItems: 'center',
