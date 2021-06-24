@@ -1,20 +1,22 @@
 import React, {useState, useEffect} from 'react';
-import { Button, StyleSheet, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import { Button, StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import { Text, TextInput, View } from '../components/Themed';
-import ToolInput from '../components/ToolInput';
-import DescriptionInput from '../components/DescriptionInput';
-import Select from '../components/Select';
+
 import Spacer, {EvenlySpace} from '../components/Spacer';
 import Image from '../components/Image';
 import RoundedButton from '../components/RoundedButton';
 import {useTools, useInfo} from '../hooks'
 
+const InfoItem = ({label, value}) => <View style={styles.listItem}>
+  <Text>{label}: </Text>
+  <TextInput value={String(value)} />
+</View>
+
 export default function ToolDetails({navigation}) {
   const {selectedTool} = useTools()
   const {latitude, longitude} = selectedTool
-  const {isAndroid, isKeyboardActive} = useInfo()
+  const {isAndroid} = useInfo()
 
   useEffect(() => {
     if (selectedTool.name) {
@@ -30,6 +32,7 @@ export default function ToolDetails({navigation}) {
       <ScrollView contentContainerStyle={styles.container}>
         <Spacer height={20} />
         <EvenlySpace>
+          <InfoItem label='Besitzer' value={selectedTool.user.name || selectedTool.user.username} />
           {selectedTool.image && <Image url={selectedTool.image} style={{ width: '100%', height: 200 }} />}
           <View
           style={{ width: '100%', height: 200, borderRadius: 20, overflow: 'hidden' }}
@@ -61,6 +64,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20,
+  },
+  listItem: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingBottom: 20,
   },
   title: {
     fontSize: 20,

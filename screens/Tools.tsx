@@ -9,6 +9,7 @@ import {
 import { Text, View, TextInput } from '../components/Themed';
 import Spacer from '../components/Spacer'
 import useTools from '../hooks/useTools'
+import useAuth from '../hooks/useAuth'
 
 const includesLowerCase = (string, query) => {
   return string.toLowerCase().includes(query.toLowerCase())
@@ -19,6 +20,7 @@ export default function Tools({navigation}) {
   const [lastScroll, setLastScroll] = useState(0)
   const [showSearchBar, setShowSearchBar] = useState(true)
   const {tools = [], getTools, setSelectedTool, refreshing, categories} = useTools()
+  const {user} = useAuth()
 
   useEffect(() => {
     getTools()
@@ -50,7 +52,11 @@ export default function Tools({navigation}) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={tools.filter(({name, category, ...rest}) => {
+        data={tools.filter(({name, category, user: {id}, ...rest}) => {
+          const belongsToUser = user.id === id
+          if (belongsToUser) {
+            return false
+          }
           const {label, value} = categories.find((cat) => cat.value === category) || {}
           if (label && value) {
             const categoryString = label + value

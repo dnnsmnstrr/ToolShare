@@ -21,20 +21,18 @@ export const ToolProvider = ({children}) => {
 
   const getUserTools = async () => {
     setRefreshing(true)
-    console.log('user.id', user.id)
     const tools = await authorizedRequest('api/tool/user', {user: user.id})
-    console.log('tools', tools)
     if (tools && tools.length) {
       setUserTools(tools)
       setRefreshing(false)
     }
   }
 
-  const getTool = (id = selectedTool) => {
+  const getTool = (id) => {
     return tools.find((tool) => tool.id === id)
   }
 
-  const deleteTool = async (id = selectedTool) => {
+  const deleteTool = async (id) => {
     const response = await authorizedRequest('api/tool/del', {id}, 'DELETE')
     if (response === 'demo') {
       setTools(tools.filter((tool) => tool.id !== id))
