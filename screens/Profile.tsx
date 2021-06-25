@@ -5,7 +5,7 @@ import { RectButton } from 'react-native-gesture-handler';
 import User from '../components/User';
 import { Text, View } from '../components/Themed';
 import useAuth from '../hooks/useAuth'
-import useTools from '../hooks/useTools'
+import {useTools, useLoan} from '../hooks'
 import Spacer from '../components/Spacer'
 import IconButton from '../components/IconButton'
 import SwipeableRow from '../components/SwipeableRow'
@@ -13,6 +13,7 @@ import SwipeableRow from '../components/SwipeableRow'
 export default function Profile() {
   const {user = {}} = useAuth()
   const {userTools, getUserTools, deleteTool, toggleAvailability, refreshing} = useTools()
+  const {userLoans, getLoans} = useLoan()
   const {username, email, id} = user
 
   useEffect(() => {
@@ -40,6 +41,19 @@ export default function Profile() {
     </SwipeableRow>
   }
 
+  const renderLoan = ({ item, index, section: { title, data } }) => {
+    console.log('item', item)
+    return <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+      <Text key={index}>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
+      <Text key={index}>{item.loanDays} Tage</Text>
+    </View>
+  }
+
+  const onRefresh = () => {
+    getUserTools()
+    getLoans()
+  }
+
   return (
     <View style={styles.container}>
       <Spacer />
@@ -56,7 +70,7 @@ export default function Profile() {
           {title: 'Your tools', data: userTools, renderItem: renderPersonalTool},
           {title: 'Requested tools', data: []},
           {title: 'Lent tools', data: []},
-          {title: 'Borrowed tools', data: []},
+          {title: 'Deine Leihen', data: userLoans, renderItem: renderLoan},
         ]}
         keyExtractor={(item, index) => item + index}
       />

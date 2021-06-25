@@ -6,7 +6,7 @@ import Image from '../components/Image';
 import RoundedButton from '../components/RoundedButton';
 import MapView from '../components/MapView';
 import Select from '../components/Select';
-import {useTools, useInfo} from '../hooks'
+import {useTools, useInfo, useLoan} from '../hooks'
 
 const InfoItem = ({label, value}) => <View style={styles.listItem}>
   <Text>{label}: </Text>
@@ -15,6 +15,7 @@ const InfoItem = ({label, value}) => <View style={styles.listItem}>
 
 export default function ToolDetails({navigation}) {
   const {selectedTool} = useTools()
+  const {addLoan} = useLoan()
   const {isAndroid} = useInfo()
   const [modalVisible, setModalVisible] = useState(false)
   const [loanDuration, setLoanDuration] = useState(2)
@@ -78,11 +79,13 @@ export default function ToolDetails({navigation}) {
             <Text style={styles.modalText}>Dauer der Leihe (Tage)</Text>
             <Select selectedValue={loanDuration} options={[1,2,3,4,5]} onChange={setLoanDuration}/>
             <Spacer />
+            <RoundedButton title='Absenden' disabled={!message || !loanDuration} onPress={() => addLoan({message, loan_days: loanDuration, tool_id: selectedTool.id, request_date: new Date()})} />
+            <Spacer />
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Text style={styles.textStyle}>Abbrechen</Text>
             </Pressable>
           </View>
         </View>

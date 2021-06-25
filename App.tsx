@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {AuthProvider} from './hooks/useAuth';
 import {ToolProvider} from './hooks/useTools';
+import {LoanProvider} from './hooks/useLoan';
 
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
@@ -23,10 +24,12 @@ export default function App() {
     return (
       <AuthProvider>
         <ToolProvider>
-          <SafeAreaProvider>
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar />
-          </SafeAreaProvider>
+          <LoanProvider>
+            <SafeAreaProvider>
+              <Navigation colorScheme={colorScheme} />
+              <StatusBar />
+            </SafeAreaProvider>
+          </LoanProvider>
         </ToolProvider>
       </AuthProvider>
     );
