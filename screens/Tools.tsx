@@ -8,8 +8,7 @@ import {
 
 import { Text, View, TextInput } from '../components/Themed';
 import Spacer from '../components/Spacer'
-import useTools from '../hooks/useTools'
-import useAuth from '../hooks/useAuth'
+import {useTools, useAuth, useLocation} from '../hooks'
 
 const includesLowerCase = (string, query) => {
   return string.toLowerCase().includes(query.toLowerCase())
@@ -22,6 +21,7 @@ export default function Tools({navigation}) {
   const [animating, setAnimating] = useState(false)
   const {tools = [], getTools, setSelectedTool, refreshing, categories} = useTools()
   const {user} = useAuth()
+  const {getDistanceToLocation} = useLocation()
 
   useEffect(() => {
     getTools()
@@ -55,8 +55,8 @@ export default function Tools({navigation}) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={tools.filter(({name, category, user: {id}, ...rest}) => {
-          const belongsToUser = user && user.id === id
+        data={tools.filter(({name, category, user: toolUser, ...rest}) => {
+          const belongsToUser = user && toolUser && user.id === toolUser.id
           if (belongsToUser) {
             return false
           }
@@ -75,17 +75,19 @@ export default function Tools({navigation}) {
         stickyHeaderIndices={[0]}
         renderItem={({item}) => {
           const {name, description} = item
+          const distance = getDistanceToLocation(item)
           return(
           <TouchableHighlight onPress={() => {
             setSelectedTool(item)
             navigation.navigate('ToolDetails')}}>
             <View style={{ paddingLeft: 20 }}>
-              <Text style={styles.title}>{name}</Text>
+              <Text style={styles.title}>{name}{!isNaN(distance) && ` (${Math.round(distance)}km)`}</Text>
               <Text style={styles.description}>{description}</Text>
             </View>
           </TouchableHighlight>
         )}}
         refreshing={refreshing}
+        extraData={refreshing}
         onRefresh={getTools}
         onScroll={onScroll}
       />

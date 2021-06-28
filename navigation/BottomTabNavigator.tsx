@@ -55,14 +55,14 @@ export default function BottomTabNavigator() {
         name="Tools"
         component={TabOneNavigator}
         options={{
-          tabBarIcon: ({ color, focused }) => <Icon name={focused ? 'hammer' : 'hammer-outline'} family='ionic' color={color} />,
+          tabBarIcon: ({ color, focused }) => <Icon size={28} name={focused ? 'hammer' : 'hammer-outline'} family='ionic' color={color} />,
         }}
       />
       <BottomTab.Screen
         name="Profile"
         component={TabTwoNavigator}
         options={{
-          tabBarIcon: ({ color, focused }) => <Icon name={'toolbox'} family='materialCommunity' focused={focused} color={color} />,
+          tabBarIcon: ({ color, focused }) => <Icon size={28} name={'toolbox'} family='materialCommunity' focused={focused} color={color} />,
         }}
       />
     </BottomTab.Navigator>

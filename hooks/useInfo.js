@@ -20,9 +20,11 @@ export default function useInfo() {
     };
   }, []);
 
+  const closeKeyboard = () => Keyboard.dismiss()
   return {
     isAndroid: Platform.OS === 'android',
     isWeb: Platform.OS === 'web',
-    isKeyboardActive
+    isKeyboardActive,
+    closeKeyboard
   }
 }

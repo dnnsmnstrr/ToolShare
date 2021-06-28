@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Platform, Pressable, Modal, StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { Platform, Pressable, Modal, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
 import { Text, TextInput, View } from '../components/Themed';
 import Spacer, {EvenlySpace} from '../components/Spacer';
 import Image from '../components/Image';
@@ -14,11 +14,11 @@ const InfoItem = ({label, value}) => <View style={styles.listItem}>
 </View>
 
 export default function ToolDetails({navigation}) {
-  const {selectedTool} = useTools()
+  const {selectedTool, getCategoryTitle} = useTools()
   const {addLoan} = useLoan()
-  const {isAndroid} = useInfo()
+  const {isAndroid, isKeyboardActive, closeKeyboard} = useInfo()
   const [modalVisible, setModalVisible] = useState(false)
-  const [loanDuration, setLoanDuration] = useState(2)
+  const [loanDuration, setLoanDuration] = useState(1)
   const [message, setMessage] = useState('')
   const [inputHeight, setInputHeight] = useState(0)
 
@@ -28,9 +28,9 @@ export default function ToolDetails({navigation}) {
     }
   }, [selectedTool])
 
-
+  const toggleModal = () => setModalVisible(!modalVisible)
   return (
-    <KeyboardAvoidingView
+    <View
       style={{ flex: 1 }}
       behavior={isAndroid ? 'height' : 'padding'} enabled
     >
@@ -39,9 +39,10 @@ export default function ToolDetails({navigation}) {
         <Spacer height={20} />
         <EvenlySpace>
         <InfoItem label='Besitzer' value={selectedTool.user.name || selectedTool.user.username} />
+        <InfoItem label='Kategorie' value={getCategoryTitle(selectedTool.category)} />
         {selectedTool.image && <Image url={selectedTool.image} style={{ width: '100%', height: 200 }} />}
         {Platform.OS !== 'web' && <MapView {...selectedTool} />}
-        <RoundedButton title='Leihe anfragen' onPress={() => setModalVisible(!modalVisible)} />
+        <RoundedButton title='Leihe anfragen' onPress={toggleModal} />
         </EvenlySpace>
         </ScrollView>
       </View>
@@ -55,12 +56,13 @@ export default function ToolDetails({navigation}) {
         }}
       >
         <View style={styles.centeredView}>
+          <TouchableWithoutFeedback style={{ flex: 1 }} onPress={isKeyboardActive ? closeKeyboard : toggleModal}><View style={{ width: '100%', flex: 1, backgroundColor: 'transparent' }}/></TouchableWithoutFeedback>
           <View style={styles.modalView}>
             <TextInput
               value={message}
               onChangeText={setMessage}
               onContentSizeChange = {({nativeEvent: {contentSize: {height}}}) => setInputHeight(height)}
-              numberOfLines={inputHeight ? Math.round(inputHeight/18) : 1}
+              numberOfLines={inputHeight && isAndroid ? Math.round(inputHeight/18) : null}
               style={{
                 width: '100%',
                 maxHeight: 100,
@@ -90,7 +92,7 @@ export default function ToolDetails({navigation}) {
           </View>
         </View>
       </Modal>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -121,10 +123,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   modalView: {
-    margin: 20,
+    marginHorizontal: 20,
     width: '100%',
-    height: '60%',
-    backgroundColor: "white",
+    flex: 2,
     borderRadius: 20,
     padding: 10,
     alignItems: "center",

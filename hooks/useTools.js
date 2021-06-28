@@ -75,6 +75,11 @@ export const ToolProvider = ({children}) => {
     { label: 'Andere', value: 'other'}
   ]
 
+  const getCategoryTitle = (id) => {
+    const category = categories.find(category => category.value === id)
+    return category.label
+  }
+
   const resetTools = () => {
     setTools([])
     setUserTools([])
@@ -87,7 +92,7 @@ export const ToolProvider = ({children}) => {
     }
   }, [user])
   return (
-    <ToolContext.Provider value={{tools, getTools, refreshing, addTool, getTool, deleteTool, toggleAvailability, userTools, getUserTools, selectedTool, setSelectedTool, resetTools, categories}}>
+    <ToolContext.Provider value={{tools, getTools, refreshing, addTool, getTool, deleteTool, toggleAvailability, userTools, getUserTools, selectedTool, setSelectedTool, resetTools, categories, getCategoryTitle}}>
       {children}
     </ToolContext.Provider>
   )

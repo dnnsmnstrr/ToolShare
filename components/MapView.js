@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, TextInput, View } from '../components/Themed';
+import { View } from '../components/Themed';
 import MapView, {Marker} from 'react-native-maps';
 
 const Map = ({latitude, longitude, name, description, style}) => {
@@ -11,6 +11,7 @@ const Map = ({latitude, longitude, name, description, style}) => {
         // provider='google'
         style={{ width: '100%', height: '100%', borderRadius: 20 }}
         mapType='satellite'
+        showsUserLocation
         initialRegion={{
           latitude,
           longitude,
