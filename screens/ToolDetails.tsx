@@ -15,12 +15,14 @@ const InfoItem = ({label, value}) => <View style={styles.listItem}>
 
 export default function ToolDetails({navigation}) {
   const {selectedTool, getCategoryTitle} = useTools()
-  const {addLoan} = useLoan()
+  const {addLoan, userLoans} = useLoan()
   const {isAndroid, isKeyboardActive, closeKeyboard} = useInfo()
   const [modalVisible, setModalVisible] = useState(false)
   const [loanDuration, setLoanDuration] = useState(1)
   const [message, setMessage] = useState('')
   const [inputHeight, setInputHeight] = useState(0)
+  const alreadyRequested = userLoans && userLoans.some((loan) => loan.tool.id === selectedTool.id)
+  const [requested, setRequested] = useState(alreadyRequested)
 
   useEffect(() => {
     if (selectedTool.name) {
@@ -32,6 +34,15 @@ export default function ToolDetails({navigation}) {
   if (!selectedTool) {
     return null
   }
+
+  const handleAddLoan = async () => {
+    const success = await addLoan({message, loan_days: loanDuration, tool_id: selectedTool.id})
+    if (success) {
+      toggleModal()
+      setRequested(true)
+    }
+  }
+
   return (
     <View
       style={{ flex: 1 }}
@@ -45,7 +56,7 @@ export default function ToolDetails({navigation}) {
         <InfoItem label='Kategorie' value={getCategoryTitle(selectedTool.category)} />
         {selectedTool.image && <Image url={selectedTool.image} style={{ width: '100%', height: 200 }} />}
         {Platform.OS !== 'web' && <MapView {...selectedTool} />}
-        <RoundedButton title='Leihe anfragen' onPress={toggleModal} />
+        <RoundedButton title={requested ? 'Angefragt' : 'Leihe anfragen'} disabled={requested} onPress={toggleModal} />
         </EvenlySpace>
         </ScrollView>
       </View>
@@ -53,10 +64,7 @@ export default function ToolDetails({navigation}) {
         animationType="slide"
         transparent
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
+        onRequestClose={toggleModal}
       >
         <View style={styles.centeredView}>
           <TouchableWithoutFeedback style={{ flex: 1 }} onPress={isKeyboardActive ? closeKeyboard : toggleModal}><View style={{ width: '100%', flex: 1, backgroundColor: 'transparent' }}/></TouchableWithoutFeedback>
@@ -84,7 +92,7 @@ export default function ToolDetails({navigation}) {
             <Text style={styles.modalText}>Dauer der Leihe (Tage)</Text>
             <Select selectedValue={loanDuration} options={[1,2,3,4,5]} onChange={setLoanDuration}/>
             <Spacer />
-            <RoundedButton title='Absenden' disabled={!message || !loanDuration} onPress={() => addLoan({message, loan_days: loanDuration, tool_id: selectedTool.id, request_date: new Date()})} />
+            <RoundedButton title={'Absenden'} disabled={!message || !loanDuration} onPress={handleAddLoan} />
             <Spacer />
             <Pressable
               style={[styles.button, styles.buttonClose]}

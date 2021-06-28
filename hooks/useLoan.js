@@ -22,7 +22,8 @@ export const LoanProvider = ({children}) => {
   const getUserLoans = async () => {
     setRefreshing(true)
     const loans = await authorizedRequest('api/loan/user', {user: user.id})
-    if (loans && loans.length) {
+    console.log('loans', loans)
+    if (loans) {
       setUserLoans(loans)
       setRefreshing(false)
     }
@@ -32,7 +33,7 @@ export const LoanProvider = ({children}) => {
     return loans.find((loan) => loan.id === id)
   }
 
-  const deleteLoan = async (id) => {
+  const cancelLoan = async (id) => {
     const response = await authorizedRequest('api/loan/del', {id}, 'DELETE')
     if (response === 'demo') {
       setLoans(loans.filter((loan) => loan.id !== id))
@@ -52,14 +53,15 @@ export const LoanProvider = ({children}) => {
   }
 
   const addLoan = async (params) => {
-    const response = await authorizedRequest('api/loan/add', {...params, user: user.id}, 'POST')
+    const response = await authorizedRequest('api/loan/add', {...params, request_date: new Date(), loanStatus: 'open', user: user.id}, 'POST')
     if (response === 'demo') {
       setLoans([...loans, {id: loans.length, ...params}])
     }
+    getUserLoans()
+    return response
   }
 
   useEffect(() => {
-    // getLoans()
     if (user && user.id) {
       getUserLoans()
     }
@@ -76,8 +78,9 @@ export const LoanProvider = ({children}) => {
       resetLoans()
     }
   }, [user])
+
   return (
-    <LoanContext.Provider value={{loans, getLoans, refreshing, addLoan, getLoan, deleteLoan, toggleAvailability, userLoans, getUserLoans, selectedLoan, setSelectedLoan, resetLoans}}>
+    <LoanContext.Provider value={{loans, getLoans, refreshing, addLoan, getLoan, cancelLoan, toggleAvailability, userLoans, getUserLoans, selectedLoan, setSelectedLoan, resetLoans}}>
       {children}
     </LoanContext.Provider>
   )

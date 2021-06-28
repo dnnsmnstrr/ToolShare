@@ -12,13 +12,15 @@ import SwipeableRow from '../components/SwipeableRow'
 
 export default function Profile() {
   const {user = {}} = useAuth()
-  const {userTools, getUserTools, deleteTool, toggleAvailability, refreshing} = useTools()
-  const {userLoans, getLoans} = useLoan()
+  const {userTools, getUserTools, deleteTool, toggleAvailability, refreshing: refreshingTools} = useTools()
+  const {userLoans, getLoans, getUserLoans, cancelLoan, refreshing: refreshingLoans} = useLoan()
+  const refreshing = refreshingTools || refreshingLoans
   const {username, email, id} = user
 
   useEffect(() => {
     getUserTools()
     getLoans()
+    getUserLoans()
   }, [])
 
 
@@ -43,15 +45,19 @@ export default function Profile() {
   }
 
   const renderLoan = ({ item, index, section: { title, data } }) => {
-    return <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-      <Text>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
-      <Text>{item.loanDays} Tage</Text>
-    </View>
+    return <SwipeableRow onDelete={() => {
+      console.log('item.id', item.id)
+      cancelLoan(item.id)}}>
+      <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+        <Text>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
+        <Text>{item.loanDays} Tage</Text>
+      </View>
+    </SwipeableRow>
   }
 
   const onRefresh = () => {
     getUserTools()
-    getLoans()
+    getUserLoans()
   }
 
   return (

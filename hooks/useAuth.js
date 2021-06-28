@@ -96,10 +96,10 @@ export const AuthProvider = ({ children }) => {
       const headers = { Authorization: 'Bearer ' + token, ...(hasBody && jsonHeaders) }
       const body = JSON.stringify(params)
       // console.log('headers', headers)
-      console.log('url', url)
+      // console.log('url', url)
       // console.log('params', params)
       const response = await fetch(url + (method !== 'PUT' ? addParams(params) : ''), {method, headers, ...(hasBody && body)})
-      console.log('response', JSON.stringify(response))
+      // console.log('response', JSON.stringify(response))
       const data = await response.json()
       // console.log('data', data)
       if (data) {
