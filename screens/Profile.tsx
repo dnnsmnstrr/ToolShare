@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Animated, Alert, SectionList, StyleSheet, Switch } from 'react-native';
+import { Animated, Alert, SectionList, StyleSheet, Switch, TouchableHighlight } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { RectButton } from 'react-native-gesture-handler';
 import User from '../components/User';
@@ -10,9 +10,9 @@ import Spacer from '../components/Spacer'
 import IconButton from '../components/IconButton'
 import SwipeableRow from '../components/SwipeableRow'
 
-export default function Profile() {
+export default function Profile({navigation}) {
   const {user = {}} = useAuth()
-  const {userTools, getUserTools, deleteTool, toggleAvailability, refreshing: refreshingTools} = useTools()
+  const {userTools, getUserTools, setSelectedTool, deleteTool, toggleAvailability, refreshing: refreshingTools} = useTools()
   const {userLoans, getLoans, getUserLoans, cancelLoan, refreshing: refreshingLoans} = useLoan()
   const refreshing = refreshingTools || refreshingLoans
   const {username, email, id} = user
@@ -37,21 +37,25 @@ export default function Profile() {
       )
     }
     return <SwipeableRow onDelete={onDelete}>
-      <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-        <Text key={index}>{item.name}</Text>
-        <Switch value={item.available} onValueChange={() => toggleAvailability(item.id, !item.available)}/>
-      </View>
+      <TouchableHighlight onPress={() => {
+        setSelectedTool(item)
+        navigation.navigate('ToolEdit')
+      }}>
+        <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+          <Text key={index}>{item.name}</Text>
+          <Switch value={item.available} onValueChange={() => toggleAvailability(item.id, !item.available)} />
+        </View>
+      </TouchableHighlight>
     </SwipeableRow>
   }
 
   const renderLoan = ({ item, index, section: { title, data } }) => {
     return <SwipeableRow onDelete={() => {
-      console.log('item.id', item.id)
       cancelLoan(item.id)}}>
-      <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-        <Text>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
-        <Text>{item.loanDays} Tage</Text>
-      </View>
+        <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+          <Text>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
+          <Text>{item.loanDays} Tage</Text>
+        </View>
     </SwipeableRow>
   }
 

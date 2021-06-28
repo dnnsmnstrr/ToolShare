@@ -26,8 +26,8 @@ const LogoutButton = () => {
 
 const NavButton = ({title = '', goTo, color = 'blue', navigation}) => (
   <Button
+    style={{ paddingRight: 10 }}
     title={title}
-    style={{ marginRight: 20 }}
     color={color}
     onPress={() => navigation.navigate(goTo || title)}
   />
@@ -117,6 +117,11 @@ function TabTwoNavigator() {
           headerTitle: 'Profil',
           headerRight: () => <NavAction name='settings' onPress={() => navigation.navigate('Settings')} size={26}/>
         })}
+      />
+      <TabTwoStack.Screen
+        name="ToolEdit"
+        component={ToolDetails}
+        options={{ headerTitle: 'Tool' }}
       />
       <TabTwoStack.Screen
         name="Settings"
