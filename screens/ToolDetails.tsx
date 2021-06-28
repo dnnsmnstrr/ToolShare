@@ -10,7 +10,7 @@ import {useTools, useInfo, useLoan} from '../hooks'
 
 const InfoItem = ({label, value}) => <View style={styles.listItem}>
   <Text>{label}: </Text>
-  <TextInput value={String(value)} />
+  <Text>{String(value)}</Text>
 </View>
 
 export default function ToolDetails({navigation}) {
@@ -29,6 +29,9 @@ export default function ToolDetails({navigation}) {
   }, [selectedTool])
 
   const toggleModal = () => setModalVisible(!modalVisible)
+  if (!selectedTool) {
+    return null
+  }
   return (
     <View
       style={{ flex: 1 }}
@@ -38,7 +41,7 @@ export default function ToolDetails({navigation}) {
         <ScrollView contentContainerStyle={styles.container}>
         <Spacer height={20} />
         <EvenlySpace>
-        <InfoItem label='Besitzer' value={selectedTool.user.name || selectedTool.user.username} />
+        {selectedTool.user && <InfoItem label='Besitzer' value={selectedTool.user.name || selectedTool.user.username} />}
         <InfoItem label='Kategorie' value={getCategoryTitle(selectedTool.category)} />
         {selectedTool.image && <Image url={selectedTool.image} style={{ width: '100%', height: 200 }} />}
         {Platform.OS !== 'web' && <MapView {...selectedTool} />}
@@ -125,7 +128,7 @@ const styles = StyleSheet.create({
   modalView: {
     marginHorizontal: 20,
     width: '100%',
-    flex: 2,
+    flex: 1.1,
     borderRadius: 20,
     padding: 10,
     alignItems: "center",

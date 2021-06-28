@@ -6,17 +6,40 @@ import IconButton from '../components/IconButton';
 import {families} from '../components/Icon';
 import Spacer from '../components/Spacer';
 import Select from '../components/Select';
+import RoundedButton from '../components/RoundedButton';
+import User from '../components/User';
 import useAuth from '../hooks/useAuth'
 
-const DEV_MODE = true
+const DEV_MODE = false
 const options = DEV_MODE ? Object.keys(families).map(family => ({value: family, label: family})) : []
 export default function Settings() {
-  const {user, logout, API_URL} = useAuth()
+  const {user, authorizedRequest, API_URL} = useAuth()
+  const [editedUser, setEditedUser] = useState(user)
   const [icon, setIconName] = useState('error')
-  const [selectedFamily, setSelectedFamily] = useState(options[0].value)
+  const [selectedFamily, setSelectedFamily] = useState(options.length ? options[0].value : null)
   const [outlined, setOutlined] = useState(false)
+
+  useEffect(() => {
+    const {username, email} = user || {}
+    setEditedUser({username, email})
+  }, [user])
+
+  const onChangeUser = (key, value) => {
+    const newUser = {...editedUser}
+    newUser[key] = value
+    setEditedUser(newUser)
+  }
+
+  const updateUser = async () => {
+    const updatedUser = {...user, ...editedUser}
+    const res = await authorizedRequest('api/user/edit', updatedUser, 'PUT')
+    console.log('res', res)
+  }
+
   return (
     <View style={styles.container}>
+      {editedUser && <User {...editedUser} onChangeUser={onChangeUser}/>}
+      <RoundedButton title='Speichern' onPress={updateUser} />
       {DEV_MODE && <View style={{ width: '100%', alignItems: 'center' }}>
         <View style={styles.listItem}>
           <TextInput value={icon} onChangeText={setIconName} />
@@ -41,7 +64,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   listItem: {
     width: '50%',

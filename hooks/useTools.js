@@ -77,7 +77,9 @@ export const ToolProvider = ({children}) => {
 
   const getCategoryTitle = (id) => {
     const category = categories.find(category => category.value === id)
-    return category.label
+    if (category && category.label) {
+      return category.label
+    }
   }
 
   const resetTools = () => {

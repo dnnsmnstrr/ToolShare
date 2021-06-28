@@ -27,6 +27,7 @@ const LogoutButton = () => {
 const NavButton = ({title = '', goTo, color = 'blue', navigation}) => (
   <Button
     title={title}
+    style={{ marginRight: 20 }}
     color={color}
     onPress={() => navigation.navigate(goTo || title)}
   />

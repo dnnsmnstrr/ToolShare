@@ -18,6 +18,7 @@ export default function Profile() {
 
   useEffect(() => {
     getUserTools()
+    getLoans()
   }, [])
 
 
@@ -42,10 +43,9 @@ export default function Profile() {
   }
 
   const renderLoan = ({ item, index, section: { title, data } }) => {
-    console.log('item', item)
     return <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-      <Text key={index}>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
-      <Text key={index}>{item.loanDays} Tage</Text>
+      <Text>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
+      <Text>{item.loanDays} Tage</Text>
     </View>
   }
 
@@ -57,7 +57,7 @@ export default function Profile() {
   return (
     <View style={styles.container}>
       <Spacer />
-      {user && <User {...{username, email, id}} />}
+      {user && <User {...{username, email}} />}
       <SectionList
         style={styles.sectionList}
         onRefresh={getUserTools}
@@ -68,8 +68,8 @@ export default function Profile() {
         )}
         sections={[
           {title: 'Your tools', data: userTools, renderItem: renderPersonalTool},
-          {title: 'Requested tools', data: []},
-          {title: 'Lent tools', data: []},
+          {title: 'Angefragt', data: []},
+          {title: 'Verliehen', data: []},
           {title: 'Deine Leihen', data: userLoans, renderItem: renderLoan},
         ]}
         keyExtractor={(item, index) => item + index}

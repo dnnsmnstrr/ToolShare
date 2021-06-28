@@ -18,7 +18,7 @@ const getDemoData = (route) => {
   switch (route) {
     case 'api/tool/available':
       return [
-        {id: 0, name: 'MC Hammer', type: 'hammer', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg', latitude: 41.84201, longitude: -89.485937}
+        {id: 0, name: 'MC Hammer', category: 'hammers', image: 'https://i.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg', latitude: 41.84201, longitude: -89.485937}
       ]
     case 'api/tool/add':
       return 'demo'
@@ -49,9 +49,11 @@ export const AuthProvider = ({ children }) => {
         setToken(accessToken)
         setUser(user)
         storeValue({accessToken, ...user})
+        return true
       }
     } catch (err) {
       console.log(err)
+      return false
     }
   }
 
@@ -89,13 +91,14 @@ export const AuthProvider = ({ children }) => {
       if (!token) {
         throw new Error('missing token')
       }
-      const isPost = method === 'POST'
-      const headers = { Authorization: 'Bearer ' + token, ...(isPost && jsonHeaders) }
-      // console.log('headers', headers)
-      // console.log('params', params)
+      const hasBody = ['POST', 'PUT'].includes(method)
       const url = API_URL + route
-      // console.log('url', url)
-      const response = await fetch(url + addParams(params), {method, headers})
+      const headers = { Authorization: 'Bearer ' + token, ...(hasBody && jsonHeaders) }
+      const body = JSON.stringify(params)
+      // console.log('headers', headers)
+      console.log('url', url)
+      // console.log('params', params)
+      const response = await fetch(url + (method !== 'PUT' ? addParams(params) : ''), {method, headers, ...(hasBody && body)})
       console.log('response', JSON.stringify(response))
       const data = await response.json()
       // console.log('data', data)

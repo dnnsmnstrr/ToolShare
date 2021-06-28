@@ -18,7 +18,6 @@ export default function useInfo() {
       }
 
       const currentPosition = await Location.getCurrentPositionAsync({});
-      console.log('currentPosition', currentPosition)
       setLocation(currentPosition);
     })();
   }, [])
@@ -45,7 +44,6 @@ export default function useInfo() {
 
   const getDistanceToLocation = ({longitude, latitude}) => {
     if (!location || !location.coords) {
-      console.error('missing location info', location)
       return
     }
     return computeDistance([location.coords.latitude, location.coords.longitude], [latitude, longitude])

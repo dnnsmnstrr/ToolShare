@@ -8,7 +8,7 @@ import CenterView from '../components/CenterView';
 import RoundedButton from '../components/RoundedButton';
 import Spacer from '../components/Spacer';
 
-const DEBUG = true
+const DEBUG = 1
 
 const LoginInput = ({title = '', value, placeholder, onChangeText, ...restProps}) => {
   return <TextInput
@@ -37,12 +37,17 @@ export default function Login ({ navigation }) {
   const [password, setPassword] = useState('password')
   const [email, setEmail] = useState()
   const [registering, setRegistering] = useState()
-
+  const [error, setError] = useState()
   const registeringFieldMissing = registering && (!name || !surname || !email)
   const handleLogin = async () => {
+    setError('')
     if (!username || !password || registeringFieldMissing) return
-    await login({username, email, password, name, surname}, registering)
-    setLoading(true)
+    const success = await login({username, email, password, name, surname}, registering)
+    if (success) {
+      setLoading(true)
+    } else {
+      setError('login failed')
+    }
   }
 
   const isPasswordLengthCorrect = password.length < 6
@@ -81,6 +86,7 @@ export default function Login ({ navigation }) {
           onSubmit={handleLogin}
         />
         {registering && isPasswordLengthCorrect && <Text style={{ color: 'red' }}>Passwort muss mindestens 6 Zeichen lang sein</Text>}
+        {!!error && <Text style={{ color: 'red' }}>{error}</Text>}
         <Spacer height={10}/>
         <RoundedButton disabled={!username || !password || isPasswordLengthCorrect || registeringFieldMissing} title='Weiter' onPress={handleLogin} />
         <Spacer height={30}/>
