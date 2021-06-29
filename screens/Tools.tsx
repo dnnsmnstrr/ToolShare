@@ -38,7 +38,7 @@ export default function Tools({navigation}) {
         value={query}
         autoCorrect={false}
         onChangeText={setQuery}
-        placeholder='Search'
+        placeholder='Suchen'
         clearButtonMode='always'
         style={{height: 40, borderWidth: 1, borderColor: 'gray', borderRadius: 25, width: '100%', marginTop: 5, paddingHorizontal: 20}}
       />

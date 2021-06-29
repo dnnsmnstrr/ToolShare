@@ -7,7 +7,7 @@ const { manifest } = Constants;
 
 const LOCAL_SERVER = false
 
-const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev && false
+const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
 ? manifest.debuggerHost.split(':').shift().concat(':8080/')
 : '192.168.0.191:8080/';
 const API_URL = LOCAL_SERVER ? 'http://' + api : 'http://134.122.87.107:8080/'

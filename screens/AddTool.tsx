@@ -28,7 +28,6 @@ export default function AddTool({navigation}) {
   const [address, setAddress] = useState('')
   const [errorMsg, setErrorMsg] = useState(null);
 
-  useEffect(() => console.log('category', category), [category])
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -106,7 +105,7 @@ export default function AddTool({navigation}) {
   if (errorMsg) {
     text = errorMsg;
   } else if (address) {
-    text = `${address.street}, ${address.city}`//JSON.stringify(location);
+    text = `${address.street}, ${address.city}`
   }
 
   return (

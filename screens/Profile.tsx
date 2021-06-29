@@ -181,7 +181,7 @@ Antwort:
           <TextBackground style={{fontWeight: 'bold', paddingBottom: 5, paddingHorizontal: 20}}>{title}</TextBackground>
         )}
         sections={[
-          {title: 'Your tools', data: userTools, renderItem: renderPersonalTool},
+          {title: 'Deine Werkzeuge', data: userTools, renderItem: renderPersonalTool},
           ...(openRequests.length ? [{title: 'Angefragt', data: openRequests, renderItem: renderRequest}] : []),
           ...(onLoan.length ? [{title: 'Verliehen', data: onLoan, renderItem: renderRequest}] : []),
           ...(userLoans.length ? [{title: 'Deine Leihen', data: userLoans, renderItem: renderLoan}] : []),

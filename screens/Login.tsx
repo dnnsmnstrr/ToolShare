@@ -8,7 +8,7 @@ import CenterView from '../components/CenterView';
 import RoundedButton from '../components/RoundedButton';
 import Spacer from '../components/Spacer';
 
-const DEBUG = 1
+const DEBUG = true
 
 const LoginInput = ({title = '', value, placeholder, onChangeText, ...restProps}) => {
   return <TextInput
