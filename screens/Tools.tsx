@@ -8,6 +8,8 @@ import {
 
 import { Text, View, TextInput } from '../components/Themed';
 import Spacer from '../components/Spacer'
+import MapView, {Marker} from 'react-native-maps';
+
 import {useTools, useAuth, useLocation} from '../hooks'
 
 const includesLowerCase = (string, query) => {
@@ -52,23 +54,34 @@ export default function Tools({navigation}) {
     setLastScroll(currentScroll)
   }
 
+  const filteredTools = tools.filter(({name, category, user: toolUser, ...rest}) => {
+    const belongsToUser = user && toolUser && user.id === toolUser.id
+    if (belongsToUser) {
+      return false
+    }
+    const {label, value} = categories.find((cat) => cat.value === category) || {}
+    if (label && value) {
+      const categoryString = label + value
+      if (includesLowerCase(categoryString, query)) {
+        return true
+      }
+    }
+    return includesLowerCase(name, query)
+  })
   return (
     <View style={styles.container}>
+      <MapView
+        style={styles.mapView}
+        showsUserLocation
+        showsMyLocationButton
+      >
+        {filteredTools.map((tool) => <Marker
+          coordinate={{latitude: tool.latitude, longitude: tool.longitude}}
+          title={tool.name}
+        />)}
+      </MapView>
       <FlatList
-        data={tools.filter(({name, category, user: toolUser, ...rest}) => {
-          const belongsToUser = user && toolUser && user.id === toolUser.id
-          if (belongsToUser) {
-            return false
-          }
-          const {label, value} = categories.find((cat) => cat.value === category) || {}
-          if (label && value) {
-            const categoryString = label + value
-            if (includesLowerCase(categoryString, query)) {
-              return true
-            }
-          }
-          return includesLowerCase(name, query)
-        })}
+        data={filteredTools}
         style={{width: '100%', flex: 1}}
         keyExtractor={(item, index) => item.name + index}
         ListHeaderComponent={renderHeader}
@@ -100,6 +113,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  mapView: {
+    height: '30%',
+    width: '100%',
   },
   title: {
     fontSize: 20,

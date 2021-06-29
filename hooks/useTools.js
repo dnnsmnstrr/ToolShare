@@ -4,7 +4,7 @@ import useAuth from './useAuth'
 export const ToolContext = React.createContext({})
 
 export const ToolProvider = ({children}) => {
-  const {authorizedRequest, user} = useAuth()
+  const {authorizedRequest, user, uploadImage} = useAuth()
   const [tools, setTools] = useState([])
   const [userTools, setUserTools] = useState([])
   const [selectedTool, setSelectedTool] = useState()
@@ -53,10 +53,12 @@ export const ToolProvider = ({children}) => {
   }
 
   const addTool = async (params) => {
-    const response = await authorizedRequest('api/tool/add', {...params, user: user.id}, 'POST')
-    if (response === 'demo') {
-      setTools([...tools, {id: tools.length, ...params}])
-    }
+    const url = await uploadImage(params.image, params.name)
+    console.log('url', url)
+    // const response = await authorizedRequest('api/tool/add', {...params, user: user.id}, 'POST')
+    // if (response === 'demo') {
+    //   setTools([...tools, {id: tools.length, ...params}])
+    // }
   }
 
   useEffect(() => {

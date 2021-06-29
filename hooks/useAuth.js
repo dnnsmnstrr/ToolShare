@@ -111,6 +111,41 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const createFormData = (photo, body = {}) => {
+    const data = new FormData();
+
+    data.append("photo", {
+      name: photo.fileName,
+      type: photo.type,
+      uri:
+        Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+    });
+
+    Object.keys(body).forEach(key => {
+      data.append(key, body[key]);
+    });
+
+    return data;
+  };
+
+  const uploadImage = async (image, name) => {
+    const headers = { Authorization: 'Bearer ' + token }
+    fetch(API_URL, {
+    method: "POST",
+    headers,
+    body: createFormData({...image, fileName: name})
+  })
+    .then(response => response.json())
+    .then(response => {
+      console.log("upload success", response);
+      alert("Upload success!");
+    })
+    .catch(error => {
+      console.log("upload error", error);
+      alert("Upload failed!");
+    });
+  }
+
   const logout = () => {
     SecureStore.deleteItemAsync(USER_DATA_KEY);
     setToken(null)
@@ -142,7 +177,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ token, checkingToken, login, logout, user, getUser, authorizedRequest, API_URL }}>
+    <AuthContext.Provider value={{ token, checkingToken, login, logout, user, getUser, authorizedRequest, uploadImage, API_URL }}>
       {children}
     </AuthContext.Provider>
   )
