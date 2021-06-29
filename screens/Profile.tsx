@@ -1,24 +1,33 @@
 import React, {useState, useEffect} from 'react';
 import { Alert, SectionList, StyleSheet, Switch, TouchableHighlight } from 'react-native';
 import User from '../components/User';
-import { Text, View } from '../components/Themed';
+import { Text, TextBackground, View } from '../components/Themed';
 import useAuth from '../hooks/useAuth'
-import {useTools, useLoan} from '../hooks'
+import {useTools, useLoan, useInfo} from '../hooks'
 import Spacer from '../components/Spacer'
 import IconButton from '../components/IconButton'
 import SwipeableRow from '../components/SwipeableRow'
+import Separator from '../components/Separator'
 
 export default function Profile({navigation}) {
   const {user = {}} = useAuth()
+  const {isAndroid} = useInfo()
   const {userTools, getUserTools, setSelectedTool, deleteTool, toggleAvailability, refreshing: refreshingTools} = useTools()
-  const {userLoans, getLoans, getUserLoans, cancelLoan, refreshing: refreshingLoans} = useLoan()
+  const {
+    userLoans,
+    getUserLoans,
+    requests,
+    getRequests,
+    cancelLoan,
+    refreshing: refreshingLoans
+  } = useLoan()
   const refreshing = refreshingTools || refreshingLoans
   const {username, email, id} = user
 
   useEffect(() => {
     getUserTools()
-    getLoans()
     getUserLoans()
+    getRequests()
   }, [])
 
 
@@ -41,7 +50,7 @@ export default function Profile({navigation}) {
       }}>
         <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
           <Text key={index}>{item.name}</Text>
-          <Switch value={item.available} onValueChange={() => toggleAvailability(item.id, !item.available)} />
+          <Switch value={item.available} onValueChange={() => toggleAvailability(item.id, !item.available)} trackColor={{false: isAndroid ? 'grey' : null, true: 'green'}} thumbColor='white' />
         </View>
       </TouchableHighlight>
     </SwipeableRow>
@@ -71,23 +80,25 @@ export default function Profile({navigation}) {
   const onRefresh = () => {
     getUserTools()
     getUserLoans()
+    getRequests()
   }
 
   return (
     <View style={styles.container}>
       <Spacer />
       {user && <User {...{username, email}} />}
+      <Separator />
       <SectionList
         style={styles.sectionList}
         onRefresh={getUserTools}
         refreshing={refreshing}
         renderItem={({item, index, section}) => <Text key={index}>{item.name}</Text>}
         renderSectionHeader={({section: {title}}) => (
-          <Text style={{fontWeight: 'bold', paddingBottom: 5, paddingHorizontal: 20}}>{title}</Text>
+          <TextBackground style={{fontWeight: 'bold', paddingBottom: 5, paddingHorizontal: 20}}>{title}</TextBackground>
         )}
         sections={[
           {title: 'Your tools', data: userTools, renderItem: renderPersonalTool},
-          {title: 'Angefragt', data: [{tool: {name: 'test'}, requestAccepted: true}], renderItem: renderRequest},
+          {title: 'Angefragt', data: requests, renderItem: renderRequest},
           {title: 'Verliehen', data: [], renderItem: renderPersonalTool},
           {title: 'Deine Leihen', data: userLoans, renderItem: renderLoan},
         ]}

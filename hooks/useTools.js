@@ -53,12 +53,12 @@ export const ToolProvider = ({children}) => {
   }
 
   const addTool = async (params) => {
-    const url = await uploadImage(params.image, params.name)
-    console.log('url', url)
-    // const response = await authorizedRequest('api/tool/add', {...params, user: user.id}, 'POST')
-    // if (response === 'demo') {
-    //   setTools([...tools, {id: tools.length, ...params}])
-    // }
+    // const {message: image_id} = await uploadImage(params.image, params.name)
+    // console.log('image_id', image_id)
+    const response = await authorizedRequest('api/tool/add', {...params, user: user.id, image: '759a33a8-6849-41cd-9f82-5d9589d2f067'}, 'POST')
+    if (response === 'demo') {
+      setTools([...tools, {id: tools.length, ...params}])
+    }
   }
 
   useEffect(() => {

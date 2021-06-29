@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
   const createFormData = (photo, body = {}) => {
     const data = new FormData();
 
-    data.append("photo", {
+    data.append("file", {
       name: photo.fileName,
       type: photo.type,
       uri:
@@ -130,14 +130,16 @@ export const AuthProvider = ({ children }) => {
 
   const uploadImage = async (image, name) => {
     const headers = { Authorization: 'Bearer ' + token }
-    fetch(API_URL, {
+    console.log('api', API_URL + '/upload')
+    fetch(API_URL + 'upload', {
     method: "POST",
     headers,
     body: createFormData({...image, fileName: name})
   })
     .then(response => response.json())
     .then(response => {
-      console.log("upload success", response);
+      console.log('api', API_URL + '/upload')
+      console.log("upload success", response, API_URL);
       alert("Upload success!");
     })
     .catch(error => {

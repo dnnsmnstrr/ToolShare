@@ -7,6 +7,7 @@ export const LoanProvider = ({children}) => {
   const {authorizedRequest, user} = useAuth()
   const [loans, setLoans] = useState([])
   const [userLoans, setUserLoans] = useState([])
+  const [requests, setRequests] = useState([])
   const [selectedLoan, setSelectedLoan] = useState()
   const [refreshing, setRefreshing] = useState(false)
 
@@ -22,9 +23,17 @@ export const LoanProvider = ({children}) => {
   const getUserLoans = async () => {
     setRefreshing(true)
     const loans = await authorizedRequest('api/loan/user', {user: user.id})
-    console.log('loans', loans)
     if (loans) {
       setUserLoans(loans)
+      setRefreshing(false)
+    }
+  }
+
+  const getRequests = async () => {
+    setRefreshing(true)
+    const requests = await authorizedRequest('api/loan/tool/user', {user_id: user.id})
+    if (requests) {
+      setRequests(requests)
       setRefreshing(false)
     }
   }
@@ -80,7 +89,7 @@ export const LoanProvider = ({children}) => {
   }, [user])
 
   return (
-    <LoanContext.Provider value={{loans, getLoans, refreshing, addLoan, getLoan, cancelLoan, toggleAvailability, userLoans, getUserLoans, selectedLoan, setSelectedLoan, resetLoans}}>
+    <LoanContext.Provider value={{loans, getLoans, refreshing, addLoan, getLoan, cancelLoan, toggleAvailability, userLoans, getUserLoans, requests, getRequests, selectedLoan, setSelectedLoan, resetLoans}}>
       {children}
     </LoanContext.Provider>
   )
