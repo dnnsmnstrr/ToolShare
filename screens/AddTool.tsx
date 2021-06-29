@@ -130,10 +130,10 @@ export default function AddTool({navigation}) {
           onPress={pickImage}
           style={{ paddingVertical: 10 }}
         />}
-        <Spacer height={500} />
+        <Spacer height={50} />
       </ScrollView>
       <View style={{ paddingHorizontal: 20 }}>
-        <RoundedButton disabled={!name} title="Fertig" onPress={handleAdd} style={{ paddingHorizontal: 20 }} />
+        <RoundedButton disabled={!name || !location || !location.coords} title="Fertig" onPress={handleAdd} style={{ paddingHorizontal: 20 }} />
         <Spacer height={20} />
       </View>
       </KeyboardAvoidingView>
@@ -142,7 +142,6 @@ export default function AddTool({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20
