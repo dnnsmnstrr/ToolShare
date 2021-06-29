@@ -60,7 +60,7 @@ export default function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="Profile"
+        name="Profil"
         component={TabTwoNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <Icon size={28} name={'toolbox'} family='materialCommunity' focused={focused} color={color} />,
