@@ -42,7 +42,7 @@ export default class AppleStyleSwipeableRow extends Component {
   };
   renderRightActions = progress => (
     <View style={{ width: 100, flexDirection: I18nManager.isRTL? 'row-reverse' : 'row' }}>
-      {this.renderRightAction('Delete', '#dd2c00', 64, progress, this.props.onDelete)}
+      {this.renderRightAction(this.props.deleteText || 'Delete', '#dd2c00', 64, progress, this.props.onDelete)}
     </View>
   );
   updateRef = ref => {

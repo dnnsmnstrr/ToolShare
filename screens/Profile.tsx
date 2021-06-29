@@ -73,7 +73,7 @@ export default function Profile({navigation}) {
   }
   const renderLoan = ({ item, index, section: { title, data } }) => {
     const opacity = item.loanStatus === 'accepted' ? 1 : 0.7
-    return <SwipeableRow onDelete={() => {
+    return <SwipeableRow deleteText={['denied', 'returned'].includes(item.loanStatus) ? 'Löschen' : 'Abbrechen'} onDelete={() => {
       cancelLoan(item.id)}}>
         <View style={{
           flexDirection: 'row',
@@ -111,38 +111,42 @@ Antwort:
   }
 
   const renderRequest = ({ item, index, section: { title, data } }) => {
-    console.log('item', item)
     const isLoaned = item.loanStatus === 'accepted'
-    return <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-      <Text>{item.tool.name}</Text>
-      {isLoaned
-        ? <IconButton
-          name='undo'
-          style={{ backgroundColor: Colors.blue, width: 45 }}
-          rounded
-          color='white'
-          onPress={() => setLoanStatus(item.id, 'returned')}
-        />
-        : <View style={{ flexDirection: 'row' }}>
-        <IconButton
-          name='check'
-          family='feather'
-          style={{ backgroundColor: 'green', width: 45}}
-          color='white'
-          rounded
-          onPress={() => handleAccept(item)}
-        />
-        <Spacer width={10} />
-        <IconButton
-          name='close'
-          family='ant'
-          style={{ backgroundColor: 'red', width: 45}}
-          color='white'
-          rounded
-          onPress={() => setLoanStatus(item.id, 'denied')}
-        />
-      </View>}
-    </View>
+    return <TouchableHighlight onPress={!isLoaned ? () => Alert.alert(`Anfrage von ${item.user.name || item.user.username}`, item.message, [
+      {text: 'Abbrechen', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+      {text: 'Annehmen', onPress: () => handleAccept(item)}
+    ]) : null}>
+      <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+        <Text>{item.tool.name}</Text>
+        {isLoaned
+          ? <IconButton
+            name='undo'
+            style={{ backgroundColor: Colors.blue, width: 45 }}
+            rounded
+            color='white'
+            onPress={() => setLoanStatus(item.id, 'returned')}
+          />
+          : <View style={{ flexDirection: 'row' }}>
+          <IconButton
+            name='check'
+            family='feather'
+            style={{ backgroundColor: 'green', width: 45}}
+            color='white'
+            rounded
+            onPress={() => handleAccept(item)}
+          />
+          <Spacer width={10} />
+          <IconButton
+            name='close'
+            family='ant'
+            style={{ backgroundColor: 'red', width: 45}}
+            color='white'
+            rounded
+            onPress={() => setLoanStatus(item.id, 'denied')}
+          />
+        </View>}
+      </View>
+    </TouchableHighlight>
   }
 
   const onRefresh = () => {
@@ -169,9 +173,9 @@ Antwort:
         )}
         sections={[
           {title: 'Your tools', data: userTools, renderItem: renderPersonalTool},
-          {title: 'Angefragt', data: openRequests, renderItem: renderRequest},
-          {title: 'Verliehen', data: onLoan, renderItem: renderRequest},
-          {title: 'Deine Leihen', data: userLoans, renderItem: renderLoan},
+          ...(openRequests.length ? [{title: 'Angefragt', data: openRequests, renderItem: renderRequest}] : []),
+          ...(onLoan.length ? [{title: 'Verliehen', data: onLoan, renderItem: renderRequest}] : []),
+          ...(userLoans.length ? [{title: 'Deine Leihen', data: userLoans, renderItem: renderLoan}] : []),
         ]}
         keyExtractor={(item, index) => item + index}
       />

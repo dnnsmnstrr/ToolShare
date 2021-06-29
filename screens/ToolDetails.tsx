@@ -21,8 +21,12 @@ export default function ToolDetails({navigation}) {
   const [loanDuration, setLoanDuration] = useState(1)
   const [message, setMessage] = useState('')
   const [inputHeight, setInputHeight] = useState(0)
-  const alreadyRequested = userLoans && userLoans.some((loan) => loan.tool.id === selectedTool.id)
-  const [requested, setRequested] = useState(alreadyRequested)
+  const [requested, setRequested] = useState()
+
+  useEffect(() => {
+    const alreadyRequested = userLoans && userLoans.some((loan) => loan.tool.id === selectedTool.id)
+    setRequested(alreadyRequested)
+  }, [userLoans])
 
   useEffect(() => {
     if (selectedTool.name) {
