@@ -5,12 +5,12 @@ import * as SecureStore from 'expo-secure-store';
 
 const { manifest } = Constants;
 
-const LOCAL_SERVER = true
+const LOCAL_SERVER = false
 
 const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev && false
 ? manifest.debuggerHost.split(':').shift().concat(':8080/')
 : '192.168.0.191:8080/';
-const API_URL = LOCAL_SERVER ? 'http://' + api : 'http://134.122.75.185:8080/'
+const API_URL = LOCAL_SERVER ? 'http://' + api : 'http://134.122.87.107:8080/'
 
 const USER_DATA_KEY='user_data'
 const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json'}
@@ -129,23 +129,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   const uploadImage = async (image, name) => {
-    const headers = { Authorization: 'Bearer ' + token }
-    console.log('api', API_URL + '/upload')
-    fetch(API_URL + 'upload', {
-    method: "POST",
-    headers,
-    body: createFormData({...image, fileName: name})
-  })
-    .then(response => response.json())
-    .then(response => {
+    try {
+      const headers = { Authorization: 'Bearer ' + token }
       console.log('api', API_URL + '/upload')
-      console.log("upload success", response, API_URL);
-      alert("Upload success!");
-    })
-    .catch(error => {
-      console.log("upload error", error);
-      alert("Upload failed!");
-    });
+      const response = await fetch(API_URL + 'upload', {
+        method: "POST",
+        headers,
+        body: createFormData({...image, fileName: name})
+      })
+      const {message} = await response.json()
+      if (message) {
+        return message
+      }
+    } catch (err) {
+      console.log('err', err)
+    }
   }
 
   const logout = () => {

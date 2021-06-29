@@ -75,6 +75,7 @@ export const LoanProvider = ({children}) => {
 
   const addLoan = async (params) => {
     const response = await authorizedRequest('api/loan/add', {...params, request_date: new Date(), loanStatus: 'open', user: user.id}, 'POST')
+    console.log('response', response)
     if (response === 'demo') {
       setLoans([...loans, {id: loans.length, ...params}])
     }

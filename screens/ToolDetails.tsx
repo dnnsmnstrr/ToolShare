@@ -47,6 +47,7 @@ export default function ToolDetails({navigation}) {
     }
   }
 
+  console.log('selectedTool.image', selectedTool)
   return (
     <View
       style={{ flex: 1 }}
@@ -58,7 +59,7 @@ export default function ToolDetails({navigation}) {
         <EvenlySpace>
         {selectedTool.user && <InfoItem label='Besitzer' value={selectedTool.user.name || selectedTool.user.username} />}
         <InfoItem label='Kategorie' value={getCategoryTitle(selectedTool.category)} />
-        {selectedTool.image && <Image url={selectedTool.image} style={{ width: '100%', height: 200 }} />}
+        {selectedTool.image && <Image id={selectedTool.image} style={{ width: '100%', height: 200 }} />}
         {Platform.OS !== 'web' && <MapView {...selectedTool} />}
         <RoundedButton title={requested ? 'Angefragt' : 'Leihe anfragen'} disabled={requested} onPress={toggleModal} />
         </EvenlySpace>

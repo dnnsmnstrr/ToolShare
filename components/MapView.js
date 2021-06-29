@@ -8,9 +8,9 @@ const Map = ({latitude, longitude, name, description, style}) => {
     style={{ width: '100%', height: 200, borderRadius: 20, overflow: 'hidden', ...style}}
     >
       <MapView
-        // provider='google'
         style={{ width: '100%', height: '100%', borderRadius: 20 }}
-        mapType='satellite'
+        // provider='google'
+        // mapType='satellite'
         showsUserLocation
         initialRegion={{
           latitude,

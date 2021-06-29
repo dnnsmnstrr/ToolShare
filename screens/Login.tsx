@@ -50,7 +50,7 @@ export default function Login ({ navigation }) {
     }
   }
 
-  const isPasswordLengthCorrect = password.length < 6
+  const isPasswordLengthCorrect = password && password.length < 6
   return (
     <CenterView>
       {loading || checkingToken ? <ActivityIndicator /> : <View style={{width: '80%',flexDirection: 'column'}}>
@@ -96,6 +96,7 @@ export default function Login ({ navigation }) {
         <Button title='demo' onPress={() => {
           login({}, false, true)
         }} />
+        <Text>{API_URL}</Text>
       </View>}
 
     </CenterView>
