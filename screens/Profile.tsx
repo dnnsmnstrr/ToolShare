@@ -53,7 +53,10 @@ export default function Profile({navigation}) {
       }}>
         <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
           <Text key={index}>{item.name}</Text>
-          <Switch value={item.available} onValueChange={() => toggleAvailability(item.id, !item.available)} trackColor={{false: isAndroid ? 'grey' : null, true: 'green'}} thumbColor='white' />
+          <Switch
+            value={item.available}
+            disabled={requests.some((loan) => loan.tool.id === item.id && loan.loanStatus === 'accepted')}
+            onValueChange={() => toggleAvailability(item.id, !item.available)} trackColor={{false: isAndroid ? 'grey' : null, true: 'green'}} thumbColor='white' />
         </View>
       </TouchableHighlight>
     </SwipeableRow>
@@ -107,7 +110,13 @@ Antwort:
     console.log('status', status)
     if (status === 'sent') {
       await setLoanStatus(loan.id, 'accepted')
+      await toggleAvailability(loan.tool.id)
     }
+  }
+
+  const handleReturning = async (loanId, toolId) => {
+    await setLoanStatus(loanId, 'returned')
+    await toggleAvailability(toolId, true)
   }
 
   const renderRequest = ({ item, index, section: { title, data } }) => {
@@ -124,7 +133,7 @@ Antwort:
             style={{ backgroundColor: Colors.blue, width: 45 }}
             rounded
             color='white'
-            onPress={() => setLoanStatus(item.id, 'returned')}
+            onPress={() => handleReturning(item.id, item.tool.id)}
           />
           : <View style={{ flexDirection: 'row' }}>
           <IconButton

@@ -24,7 +24,7 @@ export default function ToolDetails({navigation}) {
   const [requested, setRequested] = useState()
 
   useEffect(() => {
-    const alreadyRequested = userLoans && userLoans.some((loan) => loan.tool.id === selectedTool.id)
+    const alreadyRequested = userLoans && userLoans.some((loan) => loan.tool.id === selectedTool.id && loan.loanStatus !== 'returned')
     setRequested(alreadyRequested)
   }, [userLoans])
 
