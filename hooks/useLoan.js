@@ -50,6 +50,18 @@ export const LoanProvider = ({children}) => {
     getUserLoans()
   }
 
+  const setLoanStatus = async (id, status) => {
+    const response = await authorizedRequest('api/loan/setstatus', {id, status}, 'PUT')
+    if (response === 'demo') {
+      const newLoans = [...userLoans]
+      const loanIndex = newLoans.findIndex((loan) => loan.id === id)
+      newLoans[loanIndex].available = available
+      setUserLoans(newLoans)
+    } else {
+      getUserLoans()
+    }
+  }
+
   const toggleAvailability = async (id, available) => {
     const response = await authorizedRequest('api/loan/setavailable', {id, available: available ? 1 : 0}, 'PUT')
     const newLoans = [...userLoans]
@@ -89,7 +101,7 @@ export const LoanProvider = ({children}) => {
   }, [user])
 
   return (
-    <LoanContext.Provider value={{loans, getLoans, refreshing, addLoan, getLoan, cancelLoan, toggleAvailability, userLoans, getUserLoans, requests, getRequests, selectedLoan, setSelectedLoan, resetLoans}}>
+    <LoanContext.Provider value={{loans, getLoans, refreshing, addLoan, getLoan, cancelLoan, toggleAvailability, setLoanStatus, userLoans, getUserLoans, requests, getRequests, selectedLoan, setSelectedLoan, resetLoans}}>
       {children}
     </LoanContext.Provider>
   )

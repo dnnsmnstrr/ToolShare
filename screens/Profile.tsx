@@ -19,6 +19,7 @@ export default function Profile({navigation}) {
     requests,
     getRequests,
     cancelLoan,
+    setLoanStatus,
     refreshing: refreshingLoans
   } = useLoan()
   const refreshing = refreshingTools || refreshingLoans
@@ -56,23 +57,56 @@ export default function Profile({navigation}) {
     </SwipeableRow>
   }
 
+  const getStatusDescription = (status) => {
+    switch (status) {
+      case 'accepted':
+        return 'geliehen'
+      case 'denied':
+        return 'abgelehnt'
+      default:
+        return 'angefragt'
+    }
+  }
   const renderLoan = ({ item, index, section: { title, data } }) => {
+    const opacity = item.loanStatus === 'accepted' ? 1 : 0.7
     return <SwipeableRow onDelete={() => {
       cancelLoan(item.id)}}>
-        <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-          <Text>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
-          <Text>{item.loanDays} Tage</Text>
+        <View style={{
+          flexDirection: 'row',
+          flex: 1,
+          paddingHorizontal: 20,
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingVertical: 10 ,
+        }}>
+          <Text style={{ opacity }}>{item.tool.name} ({getStatusDescription(item.loanStatus)})</Text>
+          <Text style={{ opacity }}>{item.loanDays} Tage</Text>
         </View>
     </SwipeableRow>
   }
 
   const renderRequest = ({ item, index, section: { title, data } }) => {
+    console.log('item', item)
     return <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
       <Text>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
       <View style={{ flexDirection: 'row' }}>
-        <IconButton name='check' family='feather' style={{ backgroundColor: 'green', width: 45}} color='white' rounded />
+        <IconButton
+          name='check'
+          family='feather'
+          style={{ backgroundColor: 'green', width: 45}}
+          color='white'
+          rounded
+          onPress={() => setLoanStatus(item.id, 'accepted')}
+        />
         <Spacer width={10} />
-        <IconButton name='close' family='ant' style={{ backgroundColor: 'red', width: 45}} color='white' rounded />
+        <IconButton
+          name='close'
+          family='ant'
+          style={{ backgroundColor: 'red', width: 45}}
+          color='white'
+          rounded
+          onPress={() => setLoanStatus(item.id, 'denied')}
+        />
       </View>
     </View>
   }
@@ -83,6 +117,9 @@ export default function Profile({navigation}) {
     getRequests()
   }
 
+  const onLoan = requests.filter((loan) => loan.loanStatus === 'accepted')
+  const openRequests = requests.filter((loan) => !['accepted', 'denied'].includes(loan.loanStatus))
+
   return (
     <View style={styles.container}>
       <Spacer />
@@ -90,7 +127,7 @@ export default function Profile({navigation}) {
       <Separator />
       <SectionList
         style={styles.sectionList}
-        onRefresh={getUserTools}
+        onRefresh={onRefresh}
         refreshing={refreshing}
         renderItem={({item, index, section}) => <Text key={index}>{item.name}</Text>}
         renderSectionHeader={({section: {title}}) => (
@@ -98,8 +135,8 @@ export default function Profile({navigation}) {
         )}
         sections={[
           {title: 'Your tools', data: userTools, renderItem: renderPersonalTool},
-          {title: 'Angefragt', data: requests, renderItem: renderRequest},
-          {title: 'Verliehen', data: [], renderItem: renderPersonalTool},
+          {title: 'Angefragt', data: openRequests, renderItem: renderRequest},
+          {title: 'Verliehen', data: onLoan, renderItem: renderLoan},
           {title: 'Deine Leihen', data: userLoans, renderItem: renderLoan},
         ]}
         keyExtractor={(item, index) => item + index}
