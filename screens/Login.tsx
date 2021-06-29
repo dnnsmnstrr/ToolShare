@@ -31,10 +31,10 @@ const LoginInput = ({title = '', value, placeholder, onChangeText, ...restProps}
 export default function Login ({ navigation }) {
   const {login, checkingToken = true, API_URL} = useAuth()
   const [loading, setLoading] = useState(false)
-  const [username, setUsername] = useState('dennis')
+  const [username, setUsername] = useState()
   const [name, setName] = useState()
   const [surname, setSurname] = useState()
-  const [password, setPassword] = useState('password')
+  const [password, setPassword] = useState()
   const [email, setEmail] = useState()
   const [registering, setRegistering] = useState()
   const [error, setError] = useState()
@@ -50,7 +50,7 @@ export default function Login ({ navigation }) {
     }
   }
 
-  const isPasswordLengthCorrect = password.length < 6
+  const isPasswordLengthCorrect = password && password.length < 6
   return (
     <CenterView>
       {loading || checkingToken ? <ActivityIndicator /> : <View style={{width: '80%',flexDirection: 'column'}}>
@@ -96,6 +96,7 @@ export default function Login ({ navigation }) {
         <Button title='demo' onPress={() => {
           login({}, false, true)
         }} />
+        <Text>{API_URL}</Text>
       </View>}
 
     </CenterView>

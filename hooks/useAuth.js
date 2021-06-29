@@ -5,12 +5,12 @@ import * as SecureStore from 'expo-secure-store';
 
 const { manifest } = Constants;
 
-const LOCAL_SERVER = true
+const LOCAL_SERVER = false
 
 const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
 ? manifest.debuggerHost.split(':').shift().concat(':8080/')
 : '192.168.0.191:8080/';
-const API_URL = LOCAL_SERVER ? 'http://' + api : 'http://134.122.75.185:8080/'
+const API_URL = LOCAL_SERVER ? 'http://' + api : 'http://134.122.87.107:8080/'
 
 const USER_DATA_KEY='user_data'
 const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json'}
@@ -111,6 +111,41 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const createFormData = (photo, body = {}) => {
+    const data = new FormData();
+
+    data.append("file", {
+      name: photo.fileName,
+      type: photo.type,
+      uri:
+        Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+    });
+
+    Object.keys(body).forEach(key => {
+      data.append(key, body[key]);
+    });
+
+    return data;
+  };
+
+  const uploadImage = async (image, name) => {
+    try {
+      const headers = { Authorization: 'Bearer ' + token }
+      console.log('api', API_URL + '/upload')
+      const response = await fetch(API_URL + 'upload', {
+        method: "POST",
+        headers,
+        body: createFormData({...image, fileName: name})
+      })
+      const {message} = await response.json()
+      if (message) {
+        return message
+      }
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
+
   const logout = () => {
     SecureStore.deleteItemAsync(USER_DATA_KEY);
     setToken(null)
@@ -142,7 +177,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ token, checkingToken, login, logout, user, getUser, authorizedRequest, API_URL }}>
+    <AuthContext.Provider value={{ token, checkingToken, login, logout, user, getUser, authorizedRequest, uploadImage, API_URL }}>
       {children}
     </AuthContext.Provider>
   )
