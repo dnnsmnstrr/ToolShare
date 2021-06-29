@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Alert, SectionList, StyleSheet, Switch, TouchableHighlight } from 'react-native';
+import * as MailComposer from 'expo-mail-composer';
 import User from '../components/User';
 import { Text, TextBackground, View } from '../components/Themed';
 import useAuth from '../hooks/useAuth'
@@ -8,6 +9,7 @@ import Spacer from '../components/Spacer'
 import IconButton from '../components/IconButton'
 import SwipeableRow from '../components/SwipeableRow'
 import Separator from '../components/Separator'
+import Colors from '../constants/Colors';
 
 export default function Profile({navigation}) {
   const {user = {}} = useAuth()
@@ -63,6 +65,8 @@ export default function Profile({navigation}) {
         return 'geliehen'
       case 'denied':
         return 'abgelehnt'
+      case 'returned':
+        return 'zurückgegeben'
       default:
         return 'angefragt'
     }
@@ -85,18 +89,48 @@ export default function Profile({navigation}) {
     </SwipeableRow>
   }
 
+  const handleAccept = async (loan) => {
+    console.log('loan', loan)
+    const requestDate = new Date(loan.requestDate)
+    const {status} = await MailComposer.composeAsync({
+      recipients: [loan.user.email],
+      subject: `Deine Leihe von ${loan.tool.name} wurde bestätigt`,
+      body: `
+Nachricht von ${loan.user.name || loan.user.username} (am ${requestDate.toLocaleDateString('de-DE')} um ${requestDate.toLocaleTimeString('de-DE')}):
+  | ${loan.message}
+
+Antwort:
+
+
+`
+    })
+    console.log('status', status)
+    if (status === 'sent') {
+      await setLoanStatus(loan.id, 'accepted')
+    }
+  }
+
   const renderRequest = ({ item, index, section: { title, data } }) => {
     console.log('item', item)
+    const isLoaned = item.loanStatus === 'accepted'
     return <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-      <Text>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
-      <View style={{ flexDirection: 'row' }}>
+      <Text>{item.tool.name}</Text>
+      {isLoaned
+        ? <IconButton
+          name='undo'
+          style={{ backgroundColor: Colors.blue, width: 45 }}
+          rounded
+          color='white'
+          onPress={() => setLoanStatus(item.id, 'returned')}
+        />
+        : <View style={{ flexDirection: 'row' }}>
         <IconButton
           name='check'
           family='feather'
           style={{ backgroundColor: 'green', width: 45}}
           color='white'
           rounded
-          onPress={() => setLoanStatus(item.id, 'accepted')}
+          onPress={() => handleAccept(item)}
         />
         <Spacer width={10} />
         <IconButton
@@ -107,7 +141,7 @@ export default function Profile({navigation}) {
           rounded
           onPress={() => setLoanStatus(item.id, 'denied')}
         />
-      </View>
+      </View>}
     </View>
   }
 
@@ -118,7 +152,7 @@ export default function Profile({navigation}) {
   }
 
   const onLoan = requests.filter((loan) => loan.loanStatus === 'accepted')
-  const openRequests = requests.filter((loan) => !['accepted', 'denied'].includes(loan.loanStatus))
+  const openRequests = requests.filter((loan) => !['accepted', 'denied', 'returned'].includes(loan.loanStatus))
 
   return (
     <View style={styles.container}>
@@ -136,7 +170,7 @@ export default function Profile({navigation}) {
         sections={[
           {title: 'Your tools', data: userTools, renderItem: renderPersonalTool},
           {title: 'Angefragt', data: openRequests, renderItem: renderRequest},
-          {title: 'Verliehen', data: onLoan, renderItem: renderLoan},
+          {title: 'Verliehen', data: onLoan, renderItem: renderRequest},
           {title: 'Deine Leihen', data: userLoans, renderItem: renderLoan},
         ]}
         keyExtractor={(item, index) => item + index}

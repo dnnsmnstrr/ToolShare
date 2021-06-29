@@ -58,7 +58,7 @@ export const LoanProvider = ({children}) => {
       newLoans[loanIndex].available = available
       setUserLoans(newLoans)
     } else {
-      getUserLoans()
+      getRequests()
     }
   }
 
