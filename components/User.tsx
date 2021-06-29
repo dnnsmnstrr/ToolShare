@@ -5,10 +5,15 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from '../constants/Colors';
 import { Text, View, TextInput } from './Themed';
 
-const InfoItem = ({label, value, onChange}) => <View style={styles.listItem}>
-  <Text>{label}: </Text>
-  {onChange ? <TextInput onChangeText={onChange} value={String(value)} /> : <Text>{value}</Text>}
-</View>
+const InfoItem = ({label, value, onChange}) => {
+    const replaceLabel = (text) => {
+        return text.replace('username', 'Nutzername').replace('email', 'E-Mail');
+    }
+
+    return <View style={styles.listItem}>
+      <Text>{replaceLabel(label)}: </Text>
+      {onChange ? <TextInput onChangeText={onChange} value={String(value)} /> : <Text>{value}</Text>}
+    </View>}
 
 export default function User({onChangeUser, ...info}) {
   return (

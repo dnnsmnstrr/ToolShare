@@ -77,7 +77,7 @@ export default function Profile({navigation}) {
           <Text style={{fontWeight: 'bold', paddingBottom: 5, paddingHorizontal: 20}}>{title}</Text>
         )}
         sections={[
-          {title: 'Your tools', data: userTools, renderItem: renderPersonalTool},
+          {title: 'Deine Werkzeuge', data: userTools, renderItem: renderPersonalTool},
           {title: 'Angefragt', data: []},
           {title: 'Verliehen', data: []},
           {title: 'Deine Leihen', data: userLoans, renderItem: renderLoan},

@@ -90,9 +90,9 @@ export default function AddTool({navigation}) {
     behavior={isAndroid ? 'height' : 'padding'} enabled>
       <ScrollView contentContainerStyle={styles.container}>
         <ToolInput title='Name' style={{marginTop: 30}} onChangeText={setName} />
-        <DescriptionInput placeholder='Description' onChangeText={setDescription} />
+        <DescriptionInput placeholder='Beschreibung' onChangeText={setDescription} />
         <Select selectedValue={category} options={categories} onChange={setCategory}/>
-        {!image && <IconButton name='camera' family='ionic' title="Add image" onPress={pickImage} />}
+        {!image && <IconButton name='camera' family='ionic' title="Bild hinzufügen" onPress={pickImage} />}
         {image && <Image
           source={{ uri: image }}
           onPress={pickImage}

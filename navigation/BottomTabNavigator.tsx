@@ -94,7 +94,7 @@ function TabOneNavigator() {
       <TabOneStack.Screen
         name="AddTool"
         component={AddTool}
-        options={{ headerTitle: 'Add new tool' }}
+        options={{ headerTitle: 'Werkzeug hinzufügen' }}
       />
       <TabOneStack.Screen
         name="ToolDetails"
