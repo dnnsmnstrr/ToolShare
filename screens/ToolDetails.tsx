@@ -21,8 +21,12 @@ export default function ToolDetails({navigation}) {
   const [loanDuration, setLoanDuration] = useState(1)
   const [message, setMessage] = useState('')
   const [inputHeight, setInputHeight] = useState(0)
-  const alreadyRequested = userLoans && userLoans.some((loan) => loan.tool.id === selectedTool.id)
-  const [requested, setRequested] = useState(alreadyRequested)
+  const [requested, setRequested] = useState()
+
+  useEffect(() => {
+    const alreadyRequested = userLoans && userLoans.some((loan) => loan.tool.id === selectedTool.id && loan.loanStatus !== 'returned')
+    setRequested(alreadyRequested)
+  }, [userLoans])
 
   useEffect(() => {
     if (selectedTool.name) {
@@ -43,6 +47,7 @@ export default function ToolDetails({navigation}) {
     }
   }
 
+  console.log('selectedTool.image', selectedTool)
   return (
     <View
       style={{ flex: 1 }}
@@ -54,7 +59,7 @@ export default function ToolDetails({navigation}) {
         <EvenlySpace>
         {selectedTool.user && <InfoItem label='Besitzer' value={selectedTool.user.name || selectedTool.user.username} />}
         <InfoItem label='Kategorie' value={getCategoryTitle(selectedTool.category)} />
-        {selectedTool.image && <Image url={selectedTool.image} style={{ width: '100%', height: 200 }} />}
+        {selectedTool.image && <Image id={selectedTool.image} style={{ width: '100%', height: 200 }} />}
         {Platform.OS !== 'web' && <MapView {...selectedTool} />}
         <RoundedButton title={requested ? 'Angefragt' : 'Leihe anfragen'} disabled={requested} onPress={toggleModal} />
         </EvenlySpace>
@@ -109,7 +114,6 @@ export default function ToolDetails({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20,

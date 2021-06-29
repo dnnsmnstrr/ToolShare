@@ -7,6 +7,7 @@ export const LoanProvider = ({children}) => {
   const {authorizedRequest, user} = useAuth()
   const [loans, setLoans] = useState([])
   const [userLoans, setUserLoans] = useState([])
+  const [requests, setRequests] = useState([])
   const [selectedLoan, setSelectedLoan] = useState()
   const [refreshing, setRefreshing] = useState(false)
 
@@ -22,9 +23,17 @@ export const LoanProvider = ({children}) => {
   const getUserLoans = async () => {
     setRefreshing(true)
     const loans = await authorizedRequest('api/loan/user', {user: user.id})
-    console.log('loans', loans)
     if (loans) {
       setUserLoans(loans)
+      setRefreshing(false)
+    }
+  }
+
+  const getRequests = async () => {
+    setRefreshing(true)
+    const requests = await authorizedRequest('api/loan/tool/user', {user_id: user.id})
+    if (requests) {
+      setRequests(requests)
       setRefreshing(false)
     }
   }
@@ -41,6 +50,18 @@ export const LoanProvider = ({children}) => {
     getUserLoans()
   }
 
+  const setLoanStatus = async (id, status) => {
+    const response = await authorizedRequest('api/loan/setstatus', {id, status}, 'PUT')
+    if (response === 'demo') {
+      const newLoans = [...userLoans]
+      const loanIndex = newLoans.findIndex((loan) => loan.id === id)
+      newLoans[loanIndex].available = available
+      setUserLoans(newLoans)
+    } else {
+      getRequests()
+    }
+  }
+
   const toggleAvailability = async (id, available) => {
     const response = await authorizedRequest('api/loan/setavailable', {id, available: available ? 1 : 0}, 'PUT')
     const newLoans = [...userLoans]
@@ -54,6 +75,7 @@ export const LoanProvider = ({children}) => {
 
   const addLoan = async (params) => {
     const response = await authorizedRequest('api/loan/add', {...params, request_date: new Date(), loanStatus: 'open', user: user.id}, 'POST')
+    console.log('response', response)
     if (response === 'demo') {
       setLoans([...loans, {id: loans.length, ...params}])
     }
@@ -80,7 +102,7 @@ export const LoanProvider = ({children}) => {
   }, [user])
 
   return (
-    <LoanContext.Provider value={{loans, getLoans, refreshing, addLoan, getLoan, cancelLoan, toggleAvailability, userLoans, getUserLoans, selectedLoan, setSelectedLoan, resetLoans}}>
+    <LoanContext.Provider value={{loans, getLoans, refreshing, addLoan, getLoan, cancelLoan, toggleAvailability, setLoanStatus, userLoans, getUserLoans, requests, getRequests, selectedLoan, setSelectedLoan, resetLoans}}>
       {children}
     </LoanContext.Provider>
   )
