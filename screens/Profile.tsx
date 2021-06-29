@@ -1,7 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Animated, Alert, SectionList, StyleSheet, Switch, TouchableHighlight } from 'react-native';
-import Swipeable from 'react-native-gesture-handler/Swipeable'
-import { RectButton } from 'react-native-gesture-handler';
+import { Alert, SectionList, StyleSheet, Switch, TouchableHighlight } from 'react-native';
 import User from '../components/User';
 import { Text, View } from '../components/Themed';
 import useAuth from '../hooks/useAuth'
@@ -59,6 +57,17 @@ export default function Profile({navigation}) {
     </SwipeableRow>
   }
 
+  const renderRequest = ({ item, index, section: { title, data } }) => {
+    return <View style={{ flexDirection: 'row', flex: 1, paddingHorizontal: 20, justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+      <Text>{item.tool.name} {item.requestAccepted ? '(geliehen)' : '(Anfrage offen)'}</Text>
+      <View style={{ flexDirection: 'row' }}>
+        <IconButton name='check' family='feather' style={{ backgroundColor: 'green', width: 45}} color='white' rounded />
+        <Spacer width={10} />
+        <IconButton name='close' family='ant' style={{ backgroundColor: 'red', width: 45}} color='white' rounded />
+      </View>
+    </View>
+  }
+
   const onRefresh = () => {
     getUserTools()
     getUserLoans()
@@ -78,8 +87,8 @@ export default function Profile({navigation}) {
         )}
         sections={[
           {title: 'Your tools', data: userTools, renderItem: renderPersonalTool},
-          {title: 'Angefragt', data: []},
-          {title: 'Verliehen', data: []},
+          {title: 'Angefragt', data: [{tool: {name: 'test'}, requestAccepted: true}], renderItem: renderRequest},
+          {title: 'Verliehen', data: [], renderItem: renderPersonalTool},
           {title: 'Deine Leihen', data: userLoans, renderItem: renderLoan},
         ]}
         keyExtractor={(item, index) => item + index}
