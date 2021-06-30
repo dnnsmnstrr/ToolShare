@@ -60,19 +60,16 @@ export default function Login ({ navigation }) {
             onChangeText={setName}
             value={name}
             placeholder="Vorname"
-            onSubmit={handleLogin}
           />
           <LoginInput
             onChangeText={setSurname}
             value={surname}
             placeholder="Nachname"
-            onSubmit={handleLogin}
           />
           <LoginInput
             onChangeText={setEmail}
             value={email}
             placeholder="E-mail"
-            onSubmit={handleLogin}
           />
         </>}
         <LoginInput
@@ -84,7 +81,7 @@ export default function Login ({ navigation }) {
           onChangeText={setPassword}
           value={password}
           placeholder="Passwort"
-          onSubmit={handleLogin}
+          onSubmitEditing={handleLogin}
         />
         {registering && isPasswordLengthCorrect && <Text style={{ color: 'red' }}>Passwort muss mindestens 6 Zeichen lang sein</Text>}
         {!!error && <Text style={{ color: 'red' }}>{error}</Text>}
