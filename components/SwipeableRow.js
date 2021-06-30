@@ -53,6 +53,11 @@ export default class AppleStyleSwipeableRow extends Component {
   };
   render() {
     const { children } = this.props;
+    if (this.props.disabled) {
+      return <View>
+        {children}
+      </View>
+    }
     return (
       <Swipeable
         ref={this.updateRef}

@@ -76,7 +76,7 @@ export default function Profile({navigation}) {
   }
   const renderLoan = ({ item, index, section: { title, data } }) => {
     const opacity = item.loanStatus === 'accepted' ? 1 : 0.7
-    return <SwipeableRow deleteText={['denied', 'returned'].includes(item.loanStatus) ? 'Löschen' : 'Abbrechen'} onDelete={() => {
+    return <SwipeableRow disabled={item.loanStatus === 'accepted'} deleteText={['denied', 'returned'].includes(item.loanStatus) ? 'Löschen' : 'Abbrechen'} onDelete={() => {
       cancelLoan(item.id)}}>
         <View style={{
           flexDirection: 'row',

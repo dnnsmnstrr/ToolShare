@@ -80,7 +80,7 @@ export const LoanProvider = ({children}) => {
       setLoans([...loans, {id: loans.length, ...params}])
     }
     getUserLoans()
-    return response
+    return true
   }
 
   useEffect(() => {
