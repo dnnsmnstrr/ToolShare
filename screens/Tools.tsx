@@ -23,8 +23,25 @@ export default function Tools({navigation}) {
   const [animating, setAnimating] = useState(false)
   const {tools = [], getTools, setSelectedTool, refreshing, categories} = useTools()
   const {user} = useAuth()
-  const {getDistanceToLocation} = useLocation()
-
+  const {getDistanceToLocation, location} = useLocation()
+  const [region, setRegion] = useState({
+    latitude: 50.045,
+    longitude: 8.284949875616404,
+    latitudeDelta: 0.12,
+    longitudeDelta: 0.05,
+  })
+  useEffect(() => {
+    console.log('location', location)
+    if (!region) {
+      setRegion({
+        ...location.coords,
+        latitude: 50.0078108817776,
+        longitude: 8.284949875616404,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      })
+    }
+  }, [location])
   useEffect(() => {
     getTools()
   }, [])
@@ -46,7 +63,7 @@ export default function Tools({navigation}) {
 
   const onScroll = (event) => {
     const {contentOffset: {y: currentScroll}, contentSize, layoutMeasurement} = event.nativeEvent
-    setShowSearchBar(currentScroll <= 0 || (lastScroll >= currentScroll && currentScroll + layoutMeasurement.height < contentSize.height) || contentSize.height < layoutMeasurement.height)
+    setShowSearchBar(currentScroll <= 0 || (lastScroll >= currentScroll && (currentScroll + layoutMeasurement.height) < contentSize.height) || contentSize.height < layoutMeasurement.height)
     if (!animating) {
       setAnimating(true)
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut, () => setAnimating(false))
@@ -68,18 +85,28 @@ export default function Tools({navigation}) {
     }
     return includesLowerCase(name, query)
   })
+
+  const selectTool = (tool) => {
+    setSelectedTool(tool)
+    navigation.navigate('ToolDetails')
+  }
   return (
     <View style={styles.container}>
-      <MapView
+      {region && region.latitude && <MapView
+        region={region}
         style={styles.mapView}
         showsUserLocation
         showsMyLocationButton
+        onRegionChangeComplete={setRegion}
+        // initialRegion={region}
+        // onRegionChange={setRegion}
       >
         {filteredTools.map((tool) => <Marker
+          onCalloutPress={() => selectTool(tool)}
           coordinate={{latitude: tool.latitude, longitude: tool.longitude}}
           title={tool.name}
         />)}
-      </MapView>
+      </MapView>}
       <FlatList
         data={filteredTools}
         style={{width: '100%', flex: 1}}
@@ -90,9 +117,7 @@ export default function Tools({navigation}) {
           const {name, description} = item
           const distance = getDistanceToLocation(item)
           return(
-          <TouchableHighlight onPress={() => {
-            setSelectedTool(item)
-            navigation.navigate('ToolDetails')}}>
+          <TouchableHighlight onPress={() => selectTool(item)}>
             <View style={{ paddingLeft: 20 }}>
               <Text style={styles.title}>{name}{!isNaN(distance) && ` (${Math.round(distance)}km)`}</Text>
               <Text style={styles.description}>{description}</Text>
