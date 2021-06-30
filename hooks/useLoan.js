@@ -55,7 +55,7 @@ export const LoanProvider = ({children}) => {
     if (response === 'demo') {
       const newLoans = [...userLoans]
       const loanIndex = newLoans.findIndex((loan) => loan.id === id)
-      newLoans[loanIndex].available = available
+      newLoans[loanIndex].loanStatus = status
       setUserLoans(newLoans)
     } else {
       getRequests()

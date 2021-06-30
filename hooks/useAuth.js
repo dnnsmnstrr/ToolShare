@@ -99,7 +99,9 @@ export const AuthProvider = ({ children }) => {
       // console.log('url', url)
       // console.log('params', params)
       const response = await fetch(url + addParams(params), {method, headers, ...(hasBody && body)})
-      // console.log('response', JSON.stringify(response))
+      // if (method === 'PUT') {
+      //   console.log('response', JSON.stringify(response))
+      // }
       const data = await response.json()
       // console.log('data', data)
       if (data) {
@@ -107,7 +109,6 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       console.log(err)
-      return {}
     }
   }
 

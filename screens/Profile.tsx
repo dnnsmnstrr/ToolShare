@@ -93,7 +93,6 @@ export default function Profile({navigation}) {
   }
 
   const handleAccept = async (loan) => {
-    console.log('loan', loan)
     const requestDate = new Date(loan.requestDate)
     const {status} = await MailComposer.composeAsync({
       recipients: [loan.user.email],
@@ -164,8 +163,8 @@ Antwort:
     getRequests()
   }
 
-  const onLoan = requests.filter((loan) => loan.loanStatus === 'accepted')
-  const openRequests = requests.filter((loan) => !['accepted', 'denied', 'returned'].includes(loan.loanStatus))
+  const onLoan = requests ? requests.filter((loan) => loan.loanStatus === 'accepted') : []
+  const openRequests = requests ? requests.filter((loan) => !['accepted', 'denied', 'returned'].includes(loan.loanStatus)) : []
 
   return (
     <View style={styles.container}>
