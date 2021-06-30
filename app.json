@@ -29,6 +29,8 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "description": "Share your spare or unused tool with the community around you",
+    "githubUrl": "https://github.com/dnnsmnstrr/ToolShare"
   }
 }

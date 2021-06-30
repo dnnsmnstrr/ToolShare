@@ -8,7 +8,7 @@ import CenterView from '../components/CenterView';
 import RoundedButton from '../components/RoundedButton';
 import Spacer from '../components/Spacer';
 
-const DEBUG = true
+const DEBUG = false
 
 const LoginInput = ({title = '', value, placeholder, onChangeText, ...restProps}) => {
   return <TextInput
@@ -39,6 +39,7 @@ export default function Login ({ navigation }) {
   const [registering, setRegistering] = useState()
   const [error, setError] = useState()
   const registeringFieldMissing = registering && (!name || !surname || !email)
+
   const handleLogin = async () => {
     setError('')
     if (!username || !password || registeringFieldMissing) return
@@ -46,7 +47,7 @@ export default function Login ({ navigation }) {
     if (success) {
       setLoading(true)
     } else {
-      setError('login failed')
+      setError('Login fehlgeschlagen')
     }
   }
 
@@ -58,31 +59,31 @@ export default function Login ({ navigation }) {
           <LoginInput
             onChangeText={setName}
             value={name}
-            placeholder="name"
+            placeholder="Vorname"
             onSubmit={handleLogin}
           />
           <LoginInput
             onChangeText={setSurname}
             value={surname}
-            placeholder="surname"
+            placeholder="Nachname"
             onSubmit={handleLogin}
           />
           <LoginInput
             onChangeText={setEmail}
             value={email}
-            placeholder="email"
+            placeholder="E-mail"
             onSubmit={handleLogin}
           />
         </>}
         <LoginInput
           onChangeText={setUsername}
           value={username}
-          placeholder="username"
+          placeholder="Benutzername"
         />
         <LoginInput
           onChangeText={setPassword}
           value={password}
-          placeholder="password"
+          placeholder="Passwort"
           onSubmit={handleLogin}
         />
         {registering && isPasswordLengthCorrect && <Text style={{ color: 'red' }}>Passwort muss mindestens 6 Zeichen lang sein</Text>}
@@ -90,7 +91,7 @@ export default function Login ({ navigation }) {
         <Spacer height={10}/>
         <RoundedButton disabled={!username || !password || isPasswordLengthCorrect || registeringFieldMissing} title='Weiter' onPress={handleLogin} />
         <Spacer height={30}/>
-        <Button title={registering ? 'Login' : 'Register'} onPress={() => setRegistering(!registering)} />
+        <Button title={registering ? 'Anmelden' : 'Registrieren'} onPress={() => setRegistering(!registering)} />
       </View>}
       {DEBUG && <View style={{ alignItems: 'center', paddingTop: 20 }}>
         <Button title='demo' onPress={() => {

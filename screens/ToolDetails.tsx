@@ -47,7 +47,6 @@ export default function ToolDetails({navigation}) {
     }
   }
 
-  console.log('selectedTool.image', selectedTool)
   return (
     <View
       style={{ flex: 1 }}
