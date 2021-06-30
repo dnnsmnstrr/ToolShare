@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Platform, Pressable, Modal, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
+import { Platform, Pressable, Modal, StyleSheet, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { Text, TextInput, View } from '../components/Themed';
 import Spacer, {EvenlySpace} from '../components/Spacer';
 import Image from '../components/Image';
@@ -35,18 +35,18 @@ export default function ToolDetails({navigation}) {
   }, [selectedTool])
 
   const toggleModal = () => setModalVisible(!modalVisible)
-  if (!selectedTool) {
-    return null
-  }
 
   const handleAddLoan = async () => {
-    const success = await addLoan({message, loan_days: loanDuration, tool_id: selectedTool.id})
+    const success = await addLoan({message, loanDays: loanDuration, tool: selectedTool.id})
     if (success) {
       toggleModal()
       setRequested(true)
     }
   }
 
+  if (!selectedTool) {
+    return null
+  }
   return (
     <View
       style={{ flex: 1 }}
@@ -60,7 +60,11 @@ export default function ToolDetails({navigation}) {
         <InfoItem label='Kategorie' value={getCategoryTitle(selectedTool.category)} />
         {selectedTool.image && <Image id={selectedTool.image} style={{ width: '100%', height: 200 }} />}
         {Platform.OS !== 'web' && <MapView {...selectedTool} />}
-        <RoundedButton title={requested ? 'Angefragt' : 'Leihe anfragen'} disabled={requested} onPress={toggleModal} />
+        <RoundedButton
+          title={requested ? 'Angefragt' : 'Leihe anfragen'}
+          disabled={requested}
+          onPress={toggleModal}
+        />
         </EvenlySpace>
         </ScrollView>
       </View>

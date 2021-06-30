@@ -39,7 +39,7 @@ export default function Settings() {
   return (
     <View style={styles.container}>
       {editedUser && <User {...editedUser} onChangeUser={onChangeUser}/>}
-      <RoundedButton title='Speichern' onPress={updateUser} />
+      <RoundedButton title='Speichern' onPress={updateUser} style={{ marginTop: 10 }} />
       {DEV_MODE && <View style={{ width: '100%', alignItems: 'center' }}>
         <View style={styles.listItem}>
           <TextInput value={icon} onChangeText={setIconName} />
@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingTop: 20,
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
