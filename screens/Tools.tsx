@@ -84,6 +84,13 @@ export default function Tools({navigation}) {
       }
     }
     return includesLowerCase(name, query)
+  }).map((tool) => {
+    tool.distance = getDistanceToLocation(tool)
+    return tool
+  }).sort((a, b) => {
+    if (!a.distance) return -1
+    if (!b.distance) return 1
+    return a.distance - b.distance
   })
 
   const selectTool = (tool) => {
@@ -115,11 +122,10 @@ export default function Tools({navigation}) {
         stickyHeaderIndices={[0]}
         renderItem={({item}) => {
           const {name, description} = item
-          const distance = getDistanceToLocation(item)
           return(
           <TouchableHighlight onPress={() => selectTool(item)}>
             <View style={{ paddingLeft: 20 }}>
-              <Text style={styles.title}>{name}{!isNaN(distance) && ` (${Math.round(distance)}km)`}</Text>
+              <Text style={styles.title}>{name}{!isNaN(item.distance) && ` (${Math.round(item.distance)}km)`}</Text>
               <Text style={styles.description}>{description}</Text>
             </View>
           </TouchableHighlight>
