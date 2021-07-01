@@ -163,8 +163,8 @@ Antwort:
     getRequests()
   }
 
-  const onLoan = requests ? requests.filter((loan) => loan.loanStatus === 'accepted') : []
-  const openRequests = requests ? requests.filter((loan) => !['accepted', 'denied', 'returned'].includes(loan.loanStatus)) : []
+  const onLoan = requests && Array.isArray(requests) ? requests.filter((loan) => loan.loanStatus === 'accepted') : []
+  const openRequests = requests && Array.isArray(requests) ? requests.filter((loan) => !['accepted', 'denied', 'returned'].includes(loan.loanStatus)) : []
 
   return (
     <View style={styles.container}>
