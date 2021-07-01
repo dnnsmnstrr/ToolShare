@@ -55,7 +55,7 @@ export default function Profile({navigation}) {
           <Text key={index}>{item.name}</Text>
           <Switch
             value={item.available}
-            disabled={requests.some((loan) => loan.tool.id === item.id && loan.loanStatus === 'accepted')}
+            disabled={Array.isArray(requests) && requests.some((loan) => loan.tool.id === item.id && loan.loanStatus === 'accepted')}
             onValueChange={() => toggleAvailability(item.id, !item.available)} trackColor={{false: isAndroid ? 'grey' : null, true: 'green'}} thumbColor='white' />
         </View>
       </TouchableHighlight>
